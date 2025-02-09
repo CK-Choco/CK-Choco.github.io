@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>時間轉換器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 80%;
+            max-width: 600px;
+            padding: 20px;
+            color: #333;
+        }
+        .time-box {
+            margin-bottom: 20px;
+        }
+        .time-box h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #0066cc; /* 深藍色 */
+        }
+        .time-display {
+            font-size: 1.2rem;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            color: #333;
+        }
+        select {
+            font-size: 1rem;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            width: 100%;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="time-box">
+            <h2>台灣時間 (CST)</h2>
+            <div id="taiwanTime" class="time-display"></div>
+        </div>
+        <div class="time-box">
+            <h2>選擇時區</h2>
+            <select id="timezoneSelect">
+                <option value="America/Los_Angeles">太平洋時間 (PST)</option>
+                <option value="UTC">協調世界時間 (UTC)</option>
+                <option value="America/New_York">紐約 (EST)</option>
+                <option value="Europe/London">倫敦 (GMT)</option>
+                <option value="Europe/Paris">巴黎 (CET)</option>
+                <option value="Asia/Tokyo">東京 (JST)</option>
+                <option value="Australia/Sydney">悉尼 (AEST)</option>
+                <option value="Asia/Shanghai">上海 (CST)</option>
+                <option value="Asia/Kolkata">印度 (LST)</option>
+                <option value="Asia/Dubai">杜拜 (GST)</option>
+                <option value="America/Sao_Paulo">聖保羅 (BRT)</option>
+                <option value="Africa/Johannesburg">約翰內斯堡 (SAST)</option>
+                <option value="Pacific/Auckland">奧克蘭 (NZST)</option>
+                <!-- 可以添加更多的時區選項 -->
+            </select>
+        </div>
+        <div class="time-box">
+            <h2 id="selectedTimezone">選定時區時間</h2>
+            <div id="convertedTime" class="time-display"></div>
+        </div>
+    </div>
+
+    <script>
+        function updateTaiwanTime() {
+            const taiwanTime = new Date().toLocaleString("zh-TW", { timeZone: "Asia/Taipei", hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric' });
+            document.getElementById("taiwanTime").textContent = taiwanTime;
+        }
+
+        function updateConvertedTime() {
+            const timezone = document.getElementById("timezoneSelect").value;
+            const currentTime = new Date().toLocaleString("zh-TW", { timeZone: timezone, hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric' });
+            document.getElementById("convertedTime").textContent = currentTime;
+            document.getElementById("selectedTimezone").textContent = document.getElementById("timezoneSelect").options[document.getElementById("timezoneSelect").selectedIndex].text + " 時區時間";
+        }
+
+        document.getElementById("timezoneSelect").addEventListener("change", updateConvertedTime);
+
+        setInterval(updateTaiwanTime, 1000);
+        setInterval(updateConvertedTime, 1000);
+        updateTaiwanTime();
+        updateConvertedTime(); // 初始化顯示選定時區的時間
+    </script>
+</body>
+</html>

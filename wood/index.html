@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="icon.png" />
+<title>敲木魚</title>
+<style>
+  body {
+    background-color: black;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center; /* 在主轴上水平居中 */
+    align-items: center; /* 在交叉轴上垂直居中 */
+    height: 100vh; /* 使用视窗的高度 */
+  }
+ 
+  .container {
+    max-width: 800px; /* 设置最大宽度 */
+    margin: 0 auto; /* 居中 */
+    padding: 20px;
+    color: white;
+    position: relative; /* 设置容器为相对定位 */
+  }
+
+  @media screen and (max-width: 600px) {
+    .container {
+      padding: 10px;
+    }
+  }
+
+  .wooden-fish {
+    width: 130px;
+    height: 130px;
+    background: url("icon.png") no-repeat;
+    border-style: none;
+    position: relative; /* 设置按钮为相对定位，使得子元素可以相对其定位 */
+  }
+
+  .wood-block {
+    position: absolute; /* 设置木块为绝对定位 */
+    top: -80px; /* 在按钮上方显示 */
+    left: 30%; /* 水平居中 */
+    transform: translateX(-50%); /* 水平居中 */
+    color: #ffffffff;
+	background-color: rgba(0, 0, 0, 0); /* 半透明白色背景 */
+	padding: 5px 10px; /* 设置内边距 */
+    border-radius: 5px; /* 圆角 */
+    z-index: 1; /* 设置 z-index 以确保木块位于按钮之上 */
+  }
+
+  .counter {
+    position: absolute; /* 设置计数器为绝对定位 */
+    top: -120px; /* 在按钮上方显示 */
+    left: 40%; /* 水平居中 */
+    transform: translateX(-50%); /* 水平居中 */
+    color: white;
+    font-size: 22px;
+    z-index: 1; /* 设置 z-index 以确保计数器位于按钮之上 */
+  }
+  
+  .counter1 {
+	position: absolute; /* 设置计数器为绝对定位 */
+    top: -122px; /* 在按钮上方显示 */
+    left: -50px; /* 水平居中 */
+    transform: translateX(-50%); /* 水平居中 */
+  }
+
+  .counter-container {
+    position: absolute; /* 设置计数器容器为绝对定位 */
+    top: -200px; /* 在按钮上方显示 */
+    left: 45%; /* 水平居中 */
+    transform: translateX(-50%); /* 水平居中 */
+    color: white;
+    font-size: 20px;
+    z-index: 1; /* 设置 z-index 以确保计数器容器位于按钮之上 */
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <button class="wooden-fish" id="woodenFish"></button>
+  <div class="counter-container">
+	<div class="counter1">功德:</div>
+    <div id="counter" class="counter">0</div>
+  </div>
+</div>
+<audio id="woodenFishSound">
+  <source src="f.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<script>
+var count = 0; // 初始化计数器
+
+document.getElementById("woodenFish").addEventListener("click", function() {
+  var woodBlock = document.createElement("div");
+  woodBlock.className = "wood-block";
+  woodBlock.textContent = "功德+1"; // 设置木块文本内容
+  this.appendChild(woodBlock);
+
+  // 更新计数器
+  count++;
+  document.getElementById("counter").textContent = count;
+
+  // 播放敲击音效
+  var audio = document.getElementById("woodenFishSound");
+  audio.currentTime = 0; // 重置音频
+  audio.play();
+
+  setTimeout(function() {
+    woodBlock.remove();
+  }, 125); // 1 秒后删除木块
+});
+</script>
+</body>
+</html>

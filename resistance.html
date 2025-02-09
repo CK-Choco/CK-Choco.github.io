@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>電阻色碼計算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        button {
+            font-size: 1.2em;
+            margin: 10px;
+            padding: 10px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .black { background-color: black; }
+        .brown { background-color: #8B4513; }
+        .red { background-color: red; }
+        .orange { background-color: orange; }
+        .yellow { background-color: yellow; color: black; }
+        .green { background-color: green; }
+        .blue { background-color: blue; }
+        .purple { background-color: purple; }
+        .gray { background-color: gray; color: black; }
+        .white { background-color: white; color: black; }
+		.gold {background-color: #FFD700; color: black;}
+
+        .result {
+            margin-top: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        #resistorCanvas {
+            margin-top: 20px;
+            border: 1px solid black;
+            height: 100px;
+            width: 300px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>電阻色碼計算器</h1>
+
+    <div>
+        <h3>選擇電阻條帶</h3>
+        <h4>第一條帶：</h4>
+        <button class="black" onclick="setBand(0)">黑色 (0)</button>
+        <button class="brown" onclick="setBand(1)">棕色 (1)</button>
+        <button class="red" onclick="setBand(2)">紅色 (2)</button>
+        <button class="orange" onclick="setBand(3)">橙色 (3)</button>
+        <button class="yellow" onclick="setBand(4)">黃色 (4)</button>
+        <button class="green" onclick="setBand(5)">綠色 (5)</button>
+        <button class="blue" onclick="setBand(6)">藍色 (6)</button>
+        <button class="purple" onclick="setBand(7)">紫色 (7)</button>
+        <button class="gray" onclick="setBand(8)">灰色 (8)</button>
+        <button class="white" onclick="setBand(9)">白色 (9)</button>
+    </div>
+
+    <div>
+        <h4>第二條帶：</h4>
+        <button class="black" onclick="setBand2(0)">黑色 (0)</button>
+        <button class="brown" onclick="setBand2(1)">棕色 (1)</button>
+        <button class="red" onclick="setBand2(2)">紅色 (2)</button>
+        <button class="orange" onclick="setBand2(3)">橙色 (3)</button>
+        <button class="yellow" onclick="setBand2(4)">黃色 (4)</button>
+        <button class="green" onclick="setBand2(5)">綠色 (5)</button>
+        <button class="blue" onclick="setBand2(6)">藍色 (6)</button>
+        <button class="purple" onclick="setBand2(7)">紫色 (7)</button>
+        <button class="gray" onclick="setBand2(8)">灰色 (8)</button>
+        <button class="white" onclick="setBand2(9)">白色 (9)</button>
+    </div>
+
+    <div>
+        <h4>第三條帶（倍數）：</h4>
+        <button class="gold" onclick="setMultiplier(0.1)">金色 (0.1)</button>
+        <button class="gray" onclick="setMultiplier(0.01)">銀色 (0.01)</button>
+		<button class="black" onclick="setMultiplier(1)">黑色 (1)</button>
+        <button class="brown" onclick="setMultiplier(10)">棕色 (10)</button>
+        <button class="red" onclick="setMultiplier(100)">紅色 (100)</button>
+        <button class="orange" onclick="setMultiplier(1000)">橙色 (1k)</button>
+        <button class="yellow" onclick="setMultiplier(10000)">黃色 (10k)</button>
+        <button class="green" onclick="setMultiplier(100000)">綠色 (100k)</button>
+        <button class="blue" onclick="setMultiplier(1000000)">藍色 (1M)</button>
+        <button class="purple" onclick="setMultiplier(10000000)">紫色 (10M)</button>
+    </div>
+
+    <div>
+        <h4>第四條帶（允差）：</h4>
+        <button class="brown" onclick="setTolerance(1)">棕色 ±1%</button>
+        <button class="red" onclick="setTolerance(2)">紅色 ±2%</button>
+        <button class="green" onclick="setTolerance(0.5)">綠色 ±0.5%</button>
+        <button class="blue" onclick="setTolerance(0.25)">藍色 ±0.25%</button>
+        <button class="purple" onclick="setTolerance(0.1)">紫色 ±0.1%</button>
+        <button class="gray" onclick="setTolerance(0.05)">灰色 ±0.05%</button>
+        <button class="gold" onclick="setTolerance(5)">金色 ±5%</button>
+        <button class="gray" onclick="setTolerance(10)">銀色 ±10%</button>
+    </div>
+
+    <canvas id="resistorCanvas"></canvas>
+
+    <div class="result" id="result"></div>
+
+    <script>
+        let band1, band2, multiplier, tolerance;
+
+        function setBand(value) {
+            band1 = value;
+            drawResistor();
+            calculateResistance();
+        }
+
+        function setBand2(value) {
+            band2 = value;
+            drawResistor();
+            calculateResistance();
+        }
+
+        function setMultiplier(value) {
+            multiplier = value;
+            drawResistor();
+            calculateResistance();
+        }
+
+        function setTolerance(value) {
+            tolerance = value;
+            drawResistor();
+            calculateResistance();
+        }
+
+        function drawResistor() {
+            const canvas = document.getElementById('resistorCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // 清除畫布
+
+            const colors = [
+                band1 !== undefined ? getColor(band1) : 'white',
+                band2 !== undefined ? getColor(band2) : 'white',
+                multiplier !== undefined ? getMultiplierColor(multiplier) : 'white',
+                tolerance !== undefined ? getToleranceColor(tolerance) : 'white'
+            ];
+
+            for (let i = 0; i < colors.length; i++) {
+                ctx.fillStyle = colors[i];
+                ctx.fillRect(i * 75 + 10, 10, 60, 80); // 繪製每條顏色帶
+            }
+        }
+
+        function getColor(band) {
+            const colors = [
+                'black', // 0
+                '#8B4513', // brown
+                'red', // 2
+                'orange', // 3
+                'yellow', // 4
+                'green', // 5
+                'blue', // 6
+                'purple', // 7
+                'gray', // 8
+                'white' // 9
+            ];
+            return colors[band];
+        }
+
+        function getMultiplierColor(value) {
+            switch (value) {
+				case 0.1: return '#8B4513'; // brown
+                case 0.01: return 'silver'; // silver
+                case 1: return 'black';
+                case 10: return '#8B4513'; // brown
+                case 100: return 'red';
+                case 1000: return 'orange';
+                case 10000: return 'yellow';
+                case 100000: return 'green';
+                case 1000000: return 'blue';
+				case 10000000: return 'purple';
+                default: return 'white';
+            }
+        }
+
+        function getToleranceColor(value) {
+            switch (value) {
+                case 1: return '#8B4513'; // brown
+                case 2: return 'red';
+                case 0.5: return 'green';
+                case 0.25: return 'blue';
+                case 0.1: return 'purple';
+                case 0.05: return 'gray';
+                case 5: return '#FFD700'; // gold
+                case 10: return 'silver';
+                default: return 'white';
+            }
+        }
+
+        function calculateResistance() {
+            if (band1 === undefined || band2 === undefined || multiplier === undefined || tolerance === undefined) {
+                document.getElementById('result').textContent = "請選擇所有條帶！";
+                return;
+            }
+            const resistanceValue = ((band1 * 10) + band2) * multiplier;
+			if (resistanceValue >=1000000){
+				const resistanceValueInMoh = resistanceValue / 1000000; 
+				document.getElementById('result').textContent = 
+					`電阻值為：${resistanceValueInMoh} MΩ，允差 ±${tolerance}%`;
+			}else if(resistanceValue>=1000){
+				const resistanceValueInKoh = resistanceValue / 1000; 
+				document.getElementById('result').textContent = 
+					`電阻值為：${resistanceValueInKoh} kΩ，允差 ±${tolerance}%`;
+			}else{
+				document.getElementById('result').textContent = 
+					`電阻值為：${resistanceValue} Ω，允差 ±${tolerance}%`;
+			}
+			
+        }
+    </script>
+
+</body>
+</html>
