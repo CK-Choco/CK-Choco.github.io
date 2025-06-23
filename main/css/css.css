@@ -1,0 +1,36 @@
+.head {
+    background-color: #003344;
+    color: white;
+    font-weight: bold;
+    font-size: 30px;
+    text-align: center;
+    padding: 10px;
+}
+.content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.content .box {
+    width: 280px;
+    padding: 10px;
+    margin: 10px;
+    background-color: white;
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    height: 175px;
+    line-height: 30px;
+}
+
+@media screen and (max-width:600px) {
+    .head {
+        font-size: 5vw;
+    }
+    .content {
+        flex-direction: column;
+    }
+    .content .box {
+        width: 80%;
+    }
+}
