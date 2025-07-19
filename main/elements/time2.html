@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>羅盤時鐘 ver2.0</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		html, body {
+			width: 100%;
+			height: 100%;
+			background-color: #000;
+			overflow: hidden;
+		}
+
+		#clock {
+			position: relative;
+			width: 100%;
+			height: 100%;
+		}
+
+		.label {
+			display: inline-block;
+			color: #4d4d4d;
+			text-align: center;
+			padding: 0 5px;
+			font-size: 19px;
+			transition: left 1s, top 1s;
+			transform-origin: 0% 0%;
+		}
+
+		#year-label {
+			position: absolute;
+			color: yellow;
+			font-size: 32px;
+			font-weight: bold;
+			text-shadow: 2px 2px 5px #000;
+		}
+	</style>
+</head>
+<body background="../web/web3.jpg" style="opacity:0.95">
+	<div id="clock"></div>
+	<div id="year-label" class="label"></div>
+
+	<script>
+		var monthText = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+		var dayText = ["1號", "2號", "3號", "4號", "5號", "6號", "7號", "8號", "9號", "10號", "11號", "12號", "13號", "14號", "15號", "16號","17號", "18號", "19號", "20號", "21號", "22號", "23號", "24號", "25號", "26號", "27號", "28號", "29號", "30號", "31號"];
+		var weekText = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+		var hourText = ["0點", "1點", "2點", "3點", "4點", "5點", "6點", "7點", "8點", "9點", "10點", "11點", "12點", "13點", "14點", "15點","16點", "17點", "18點", "19點", "20點", "21點", "22點", "23點"];
+		var minuteText = Array.from({length: 60}, (_, i) => (i + 1) + "分");
+		var secondsText = Array.from({length: 60}, (_, i) => (i + 1) + "秒");
+
+		var clock;
+		var monthList = [], dayList = [], weekList = [], hourList = [], minuteList = [], secondsList = [];
+
+		var textSet = [
+			[monthText, monthList],
+			[dayText, dayList],
+			[weekText, weekList],
+			[hourText, hourList],
+			[minuteText, minuteList],
+			[secondsText, secondsList]
+		];
+
+		var isCircle = false;
+
+		window.onload = function () {
+			init();
+			setInterval(runTime, 100);
+			changePosition();
+			setTimeout(changeCircle, 2000);
+		}
+
+		function init() {
+			clock = document.getElementById('clock');
+			for (var i = 0; i < textSet.length; i++) {
+				for (var j = 0; j < textSet[i][0].length; j++) {
+					var temp = createLabel(textSet[i][0][j]);
+					clock.appendChild(temp);
+					textSet[i][1].push(temp);
+				}
+			}
+		}
+
+		function createLabel(text) {
+			var div = document.createElement('div');
+			div.classList.add('label');
+			div.innerText = text;
+			return div;
+		}
+
+		function runTime() {
+			var now = new Date();
+			var month = now.getMonth();
+			var day = now.getDate();
+			var week = now.getDay();
+			var hour = now.getHours();
+			var minute = now.getMinutes() - 1;
+			var seconds = now.getSeconds();
+
+			initStyle();
+
+			var nowValue = [month, day - 1, week, hour, minute, seconds];
+			for (var i = 0; i < nowValue.length; i++) {
+				var num = nowValue[i];
+				if (textSet[i][1][num]) {
+					textSet[i][1][num].style.color = '#ffff00';
+				}
+			}
+
+			if (isCircle) {
+				var widthMid = document.body.clientWidth / 2;
+				var heightMid = document.body.clientHeight / 2;
+				for (var i = 0; i < textSet.length; i++) {
+					for (var j = 0; j < textSet[i][0].length; j++) {
+						var r = (i + 1) * 40 + 55 * i;
+						var deg = 360 / textSet[i][1].length * (j - nowValue[i]);
+						var x = r * Math.sin(deg * Math.PI / 180) + widthMid;
+						var y = heightMid - r * Math.cos(deg * Math.PI / 180);
+						var temp = textSet[i][1][j];
+						temp.style.transform = 'rotate(' + (-90 + deg) + 'deg)';
+						temp.style.left = x + 'px';
+						temp.style.top = y + 'px';
+					}
+				}
+			}
+
+			// 顯示年份在中央
+			var year = now.getFullYear();
+			var yearLabel = document.getElementById('year-label');
+			yearLabel.innerText = year;
+
+			var widthMid = document.body.clientWidth / 2;
+			var heightMid = document.body.clientHeight / 2;
+			yearLabel.style.left = (widthMid - yearLabel.offsetWidth / 2) + 'px';
+			yearLabel.style.top = (heightMid - yearLabel.offsetHeight / 2) + 'px';
+		}
+
+		function initStyle() {
+			var label = document.getElementsByClassName('label');
+			for (var i = 0; i < label.length; i++) {
+				label[i].style.color = '#9D9D9D';
+			}
+		}
+
+		function changePosition() {
+			for (let i = 0; i < textSet.length; i++) {
+				for (let j = 0; j < textSet[i][1].length; j++) {
+					let tempX = textSet[i][1][j].offsetLeft + "px";
+					let tempY = textSet[i][1][j].offsetTop + "px";
+					setTimeout(function () {
+						textSet[i][1][j].style.position = "absolute";
+						textSet[i][1][j].style.left = tempX;
+						textSet[i][1][j].style.top = tempY;
+					}, 50);
+				}
+			}
+		}
+
+		function changeCircle() {
+			isCircle = true;
+			clock.style.transform = "rotate(90deg)";
+		}
+	</script>
+</body>
+</html>
