@@ -1,5 +1,5 @@
-~~[HC 1.0](https://CK-Choco.github.io/Old_UI.html)廢棄~~  
-~~[HC 2.0](https://CK-Choco.github.io/New_UI.html)廢棄~~  
+~~[HC 1.0](https://CK-Choco.github.io/1.0.html)廢棄~~  
+~~[HC 2.0](https://CK-Choco.github.io/2.0.html)廢棄~~  
 [敲木魚](https://CK-Choco.github.io/wood/index.html)  
 [時區切換](https://CK-Choco.github.io/clock/TimeZone.html)  
 [羅盤時間](https://CK-Choco.github.io/clock/compass.html)  
