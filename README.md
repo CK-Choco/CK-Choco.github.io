@@ -1,5 +1,5 @@
 ### 首頁
-[UI 3.0](https://CK-Choco.github.io/3.0.html)  
+[UI 3.0](https://CK-Choco.github.io/UI/3.0.html)  
 ### 工具
 [羅盤時間](https://CK-Choco.github.io/clock/compass.html)  
 [羅盤時間ver2.0](https://CK-Choco.github.io/clock/compass2.html)  
@@ -13,5 +13,5 @@
 ###########
 
 ### 棄案
-~~[UI 1.0](https://CK-Choco.github.io/1.0.html)~~  
-~~[UI 2.0](https://CK-Choco.github.io/2.0.html)~~  
+~~[UI 1.0](https://CK-Choco.github.io/UI/1.0.html)~~  
+~~[UI 2.0](https://CK-Choco.github.io/UI/2.0.html)~~  
