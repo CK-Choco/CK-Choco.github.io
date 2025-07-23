@@ -1,0 +1,130 @@
+/* 基本樣式 */
+body {
+    margin: 0; /* 移除瀏覽器預設的 body 外邊距 */
+    background-color: #eeeeee; /* 設定背景顏色 */
+    background-image: url('../web/web3.jpg'); /* 設定背景圖片 */
+    background-size: cover; /* 讓圖片覆蓋整個背景 */
+    background-repeat: no-repeat; /* 不重複圖片 */
+    background-attachment: fixed; /* 固定背景圖片，捲動時圖片不動 */
+    font-family: Arial, sans-serif; /* 設定預設字體 */
+    color: #333; /* 預設文字顏色 */
+    line-height: 1.6; /* 設定行高 */
+}
+
+/* 頂部標題區塊 */
+.head {
+    background-color: rgba(0, 0, 0, 0.7); /* 半透明背景 */
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 增加陰影效果 */
+}
+
+.head a {
+    color: white;
+    text-decoration: none; /* 移除連結下劃線 */
+    font-size: 1.8em; /* 調整字體大小 */
+    font-weight: bold;
+}
+
+.head a:hover {
+    color: #ffd700; /* 懸停時變色 */
+}
+
+/* 主要內容容器 */
+.box {
+    display: flex; /* 使用 Flexbox 布局 */
+    flex-wrap: wrap; /* 允許項目換行 */
+    justify-content: center; /* 水平居中對齊 Flex 項目 */
+    gap: 20px; /* Flex 項目之間的間距 */
+    padding: 20px;
+    max-width: 1200px; /* 限制內容最大寬度 */
+    margin: 20px auto; /* 居中顯示並上下留白 */
+}
+
+/* 每個內容區塊的樣式 */
+.boxs {
+    background-color: rgba(255, 255, 255, 0.9); /* 半透明白色背景 */
+    border-radius: 8px; /* 圓角邊框 */
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 更明顯的陰影 */
+    text-align: center;
+    flex: 1 1 300px; /* Flex 縮寫: grow, shrink, basis。在空間不足時收縮，基礎寬度300px */
+    max-width: 350px; /* 限制每個區塊的最大寬度 */
+    box-sizing: border-box; /* 確保 padding 和 border 包含在寬度計算內 */
+    display: flex; /* 內部使用 flex 讓內容垂直居中或分散 */
+    flex-direction: column; /* 垂直方向排列內容 */
+    /* *** 移除或註解掉這一行！這是導致內容間距過大的主要原因 *** */
+    /* justify-content: space-between; */
+    /* 如果您希望內容始終在頂部對齊，而不是分散，請確保沒有此屬性或設定為 flex-start */
+    justify-content: flex-start; /* 讓內容從頂部開始排列，不再強制分散 */
+}
+
+.boxs .title {
+    color: #0056b3; /* 標題顏色 */
+    /* *** 調整這個值，使其與下方內容更接近 *** */
+    margin-bottom: 5px; /* 標題下方間距，從 15px 縮小到 5px */
+}
+
+.boxs h2,
+.boxs h3,
+.boxs h4 {
+    margin-top: 0; /* 移除預設頂部外邊距 */
+    color: #333;
+}
+/* 針對h4，如果您希望它與h3之間有間距，可以單獨設定 */
+.boxs h4 {
+    margin-top: 5px; /* 給h4設定一個小小的上邊距，使其與h3區隔 */
+    margin-bottom: 0; /* 確保h4下方沒有不必要的空間 */
+}
+
+
+/* 按鈕樣式 */
+.button {
+    background-color: #007bff; /* 按鈕背景色 */
+    color: white;
+    padding: 10px 15px;
+    border: none; /* 無邊框 */
+    border-radius: 5px; /* 圓角按鈕 */
+    cursor: pointer; /* 鼠標變為手型 */
+    margin-bottom: 10px; /* 按鈕下方間距 */
+    /* *** 修正置中問題 *** */
+    display: block; /* 將其改為 block，以便 margin: auto; 生效 */
+    max-width: 250px; /* 限制按鈕的最大寬度，防止過寬 */
+    margin-left: auto; /* 自動左外邊距 */
+    margin-right: auto; /* 自動右外邊距，實現水平置中 */
+    width: calc(100% - 20px); /* 寬度佔滿父容器減去 padding */
+    box-sizing: border-box; /* 確保 padding 和 border 包含在寬度計算內 */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* 平滑過渡效果和按壓效果 */
+}
+
+.button:last-of-type { /* 針對組內最後一個按鈕，移除底部外邊距 */
+    margin-bottom: 0;
+}
+
+/* 其他樣式保持不變 */
+
+.button a {
+    color: white; /* 按鈕內連結文字顏色 */
+    text-decoration: none;
+    display: block; /* 讓連結填滿按鈕區域 */
+}
+
+/* Discord 內嵌框樣式 */
+iframe {
+    max-width: 100%; /* 確保 iframe 在小螢幕上也能良好顯示 */
+    height: 350px; /* 固定高度，如果內容不多可以調整 */
+    border-radius: 8px; /* 圓角 */
+}
+
+/* 小型螢幕的響應式調整 */
+@media (max-width: 768px) {
+    .boxs {
+        flex-basis: 100%; /* 在小螢幕上讓每個區塊佔滿一行 */
+        max-width: 100%; /* 確保最大寬度也佔滿 */
+    }
+
+    .head a {
+        font-size: 1.5em; /* 調整小螢幕標題大小 */
+    }
+}
