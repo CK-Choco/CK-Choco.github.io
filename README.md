@@ -4,6 +4,7 @@
 [時區切換](https://CK-Choco.github.io/index.html)  
 [羅盤時間](https://CK-Choco.github.io//main/elements/time.html)  
 [羅盤時間ver2.0](https://CK-Choco.github.io//main/elements/time2.html)  
+[鬧鐘](https://CK-Choco.github.io/clock/index.html)   
 [文字測試](https://CK-Choco.github.io/Text_Test.html)   
 [文字測試](https://CK-Choco.github.io/Text_Test2.html)   
 [電阻計算](https://CK-Choco.github.io/resistance.html)   
