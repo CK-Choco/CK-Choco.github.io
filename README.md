@@ -1,12 +1,10 @@
-[HC 1.0](https://CK-Choco.github.io/Old_UI.html)  
+~~[HC 1.0](https://CK-Choco.github.io/Old_UI.html)~~  
 [HC 2.0](https://CK-Choco.github.io/New_UI.html)  
 [敲木魚](https://CK-Choco.github.io/wood/index.html)  
-[時區切換](https://CK-Choco.github.io/index.html)  
-[羅盤時間](https://CK-Choco.github.io//main/elements/time.html)  
-[羅盤時間ver2.0](https://CK-Choco.github.io//main/elements/time2.html)  
-[鬧鐘](https://CK-Choco.github.io/clock/index.html)   
-[文字測試](https://CK-Choco.github.io/Text_Test.html)   
-[文字測試](https://CK-Choco.github.io/Text_Test2.html)   
+[時區切換](https://CK-Choco.github.io/clock/TimeZone.html)  
+[羅盤時間](https://CK-Choco.github.io/clock/compass.html)  
+[羅盤時間ver2.0](https://CK-Choco.github.io/clock/compass2.html)  
+[鬧鐘](https://CK-Choco.github.io/clock/CountdownTimer.html)     
 [電阻計算](https://CK-Choco.github.io/resistance.html)   
 
 ###########  
