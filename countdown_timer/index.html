@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自動感應節日倒數計時器</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <div id="sync-container" class="sync-status">
+        <span class="status-dot"></span>
+        <span id="sync-text">正在同步 2026-2027 日曆...</span>
+    </div>
+
+    <h2>節日倒數計時</h2>
+
+    <div class="switch-container" id="mode-switch" onclick="toggleSwitch()">
+        <div class="slider"></div>
+        <div class="switch-option active" id="opt-holiday">政府節日</div>
+        <div class="switch-option" id="opt-custom">手選日期</div>
+    </div>
+
+    <div id="holiday-wrapper">
+        <select id="holiday-select" onchange="startTimer()"></select>
+    </div>
+
+    <div id="custom-wrapper" class="hidden">
+        <input type="datetime-local" id="custom-date" onchange="startTimer()">
+    </div>
+
+    <div id="display-name">---</div>
+
+    <div class="timer-display">
+        <div class="time-box">
+            <span class="num" id="d">00</span>
+            <span class="label">天</span>
+        </div>
+        <div class="time-box">
+            <span class="num" id="h">00</span>
+            <span class="label">時</span>
+        </div>
+        <div class="time-box">
+            <span class="num" id="m">00</span>
+            <span class="label">分</span>
+        </div>
+        <div class="time-box">
+            <span class="num" id="s">00</span>
+            <span class="label">秒</span>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

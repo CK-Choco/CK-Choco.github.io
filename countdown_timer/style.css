@@ -1,0 +1,105 @@
+/* --- 基礎變數（淺色模式預設） --- */
+:root { 
+    --bg-color: #f0f2f5;
+    --container-bg: #ffffff;
+    --text-main: #2c3e50;
+    --text-dim: #7f8c8d;
+    --primary-accent: #3498db;
+    --holiday-accent: #e67e22;
+    --input-bg: #f8fafc;
+    --input-border: #edf2f7;
+    --toggle-bg: #dfe6e9;
+    --time-box-bg: #2c3e50;
+    --time-num-color: #ffffff;
+    --status-red: #e74c3c;
+    --status-green: #2ecc71;
+}
+
+/* --- 自動偵測系統深色模式 --- */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #121212;
+        --container-bg: #1e1e1e;
+        --text-main: #e0e0e0;
+        --text-dim: #b0b0b0;
+        --primary-accent: #3498db;
+        --holiday-accent: #f39c12;
+        --input-bg: #2d2d2d;
+        --input-border: #444444;
+        --toggle-bg: #333333;
+        --time-box-bg: #252525;
+        --time-num-color: #3498db;
+        --status-red: #ff5252;
+        --status-green: #00e676;
+    }
+}
+
+* { box-sizing: border-box; }
+
+body { 
+    font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; 
+    background: var(--bg-color); 
+    color: var(--text-main);
+    display: flex; justify-content: center; align-items: center; 
+    min-height: 100vh; margin: 0; padding: 20px;
+    transition: background 0.3s ease;
+}
+
+.container { 
+    background: var(--container-bg); 
+    padding: 2.5rem 1.5rem; border-radius: 25px; 
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15); 
+    text-align: center; width: 100%; max-width: 500px;
+    transition: all 0.3s ease;
+}
+
+/* 狀態指示燈設計 */
+.sync-status {
+    font-size: 0.8rem; margin-bottom: 1.2rem;
+    display: flex; align-items: center; justify-content: center; color: var(--text-dim);
+}
+.status-dot {
+    width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px;
+    background-color: var(--status-red); box-shadow: 0 0 8px var(--status-red);
+    transition: all 0.5s ease;
+}
+.sync-status.online { color: var(--status-green); }
+.sync-status.online .status-dot { 
+    background-color: var(--status-green); 
+    box-shadow: 0 0 10px var(--status-green); 
+}
+
+/* 左右切換開關 */
+.switch-container {
+    display: inline-flex; background: var(--toggle-bg); padding: 5px; border-radius: 50px;
+    position: relative; margin-bottom: 25px; cursor: pointer; width: 100%; max-width: 280px;
+}
+.switch-option { flex: 1; padding: 12px 0; z-index: 1; font-weight: bold; color: var(--text-dim); transition: 0.3s; }
+.switch-option.active { color: #fff; }
+.slider {
+    position: absolute; top: 5px; left: 5px; width: calc(50% - 5px); height: calc(100% - 10px);
+    background: var(--primary-accent); border-radius: 50px;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.switch-container.custom-mode .slider { transform: translateX(100%); }
+
+/* 輸入與下拉選單 */
+select, input { 
+    width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px; 
+    border: 2px solid var(--input-border); font-size: 1rem; 
+    background: var(--input-bg); color: var(--text-main); outline: none;
+}
+
+/* 倒數區域 RWD 設計 */
+.timer-display { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 25px; }
+.time-box { background: var(--time-box-bg); color: var(--time-num-color); padding: 20px 5px; border-radius: 15px; border: 1px solid var(--input-border); }
+.num { font-size: 2rem; font-weight: 800; display: block; }
+.label { font-size: 0.75rem; color: var(--text-dim); }
+
+#display-name { color: var(--holiday-accent); font-weight: bold; font-size: 1.2rem; margin: 15px 0; }
+.hidden { display: none; }
+
+/* 手機版適應 (RWD) */
+@media (max-width: 480px) { 
+    .timer-display { grid-template-columns: repeat(2, 1fr); } 
+}
