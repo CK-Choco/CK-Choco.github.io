@@ -5,6 +5,7 @@
 [時區切換](https://CK-Choco.github.io/clock/TimeZone.html)  
 [鬧鐘](https://CK-Choco.github.io/clock/CountdownTimer.html)     
 [倒數計時器](https://CK-Choco.github.io/countdown_timer/index.html)  
+[網路延遲](https://CK-Choco.github.io/pingweb)/index.html)  
 ### 娛樂
 [敲木魚](https://CK-Choco.github.io/wood/index.html)  
 ### 好玩
