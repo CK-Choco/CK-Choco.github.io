@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>16-Node Network Monitor</title>
+    <title>16-Node Network Monitor (Hidden Access)</title>
     <style>
         :root {
             --bg: #0d1117;
@@ -16,58 +16,56 @@
         }
 
         body { 
-            background: var(--bg); 
-            color: var(--text); 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; 
+            background: var(--bg); color: var(--text); 
+            font-family: -apple-system, sans-serif; 
             margin: 0; padding: 15px; 
             display: flex; flex-direction: column; align-items: center;
         }
 
-        .header { text-align: center; margin-bottom: 15px; }
-        .header h2 { margin: 0; font-size: 1.5rem; color: #fff; }
-        #status-msg { font-size: 12px; color: #8b949e; margin-top: 5px; }
+        .header { text-align: center; margin-bottom: 10px; }
+        #status-msg { font-size: 12px; color: #8b949e; margin-bottom: 10px; }
 
-        /* 切換按鈕樣式 */
+        /* 輸入框與控制區 */
         .controls { 
             margin-bottom: 20px; 
-            display: flex; 
-            gap: 10px; 
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
         }
-        .btn-switch {
-            background-color: #21262d;
+
+        .secret-input {
+            background: #21262d;
             border: 1px solid var(--border);
             color: var(--accent);
-            padding: 10px 20px;
+            padding: 8px;
             border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: 0.2s;
+            text-align: center;
+            outline: none;
+            width: 120px;
+            font-family: monospace;
         }
-        .btn-switch:hover { background-color: #30363d; border-color: #8b949e; }
-        .btn-switch.active { background-color: var(--accent); color: #fff; border-color: var(--accent); }
+        .secret-input:focus { border-color: var(--accent); }
 
-        /* RWD 網格：手機 1 欄 / 平板 2 欄 / 電腦 4 欄 */
+        .btn-group { display: flex; gap: 8px; }
+        .btn-switch {
+            background-color: #21262d; border: 1px solid var(--border);
+            color: #8b949e; padding: 8px 15px; border-radius: 6px;
+            cursor: pointer; font-size: 13px;
+        }
+        .btn-switch.active { border-color: var(--accent); color: var(--accent); }
+
+        /* RWD 網格 */
         .grid { 
-            display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 12px; 
-            width: 100%; 
-            max-width: 1200px; 
+            display: grid; grid-template-columns: repeat(4, 1fr); 
+            gap: 12px; width: 100%; max-width: 1200px; 
         }
         @media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
 
         .card { 
-            background: var(--card); 
-            border: 1px solid var(--border); 
-            padding: 15px; 
-            border-radius: 8px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            background: var(--card); border: 1px solid var(--border); 
+            padding: 15px; border-radius: 8px; 
         }
-
-        .nickname { color: #fff; font-weight: bold; font-size: 1.1em; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .ip-addr { color: var(--accent); font-size: 0.85em; font-family: monospace; margin-bottom: 12px; display: block; border-bottom: 1px solid var(--border); padding-bottom: 5px;}
-
+        .nickname { color: #fff; font-weight: bold; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .ip-addr { color: var(--accent); font-size: 0.85em; font-family: monospace; margin-bottom: 10px; display: block; border-bottom: 1px solid var(--border); padding-bottom: 5px;}
         .stat { display: flex; justify-content: space-between; font-size: 0.9em; margin: 4px 0; }
         .val { color: #fff; font-family: monospace; }
         .alert { color: var(--red) !important; font-weight: bold; }
@@ -78,64 +76,76 @@
 
     <div class="header">
         <h2>網路節點監控系統</h2>
-        <div id="status-msg">正在準備中...</div>
+        <div id="status-msg">正在載入數據...</div>
     </div>
 
     <div class="controls">
-        <button class="btn-switch active" onclick="switchCsv('iplist.csv', this)">切換 iplist.csv</button>
-        <button class="btn-switch" onclick="switchCsv('iplist2.csv', this)">切換 iplist2.csv</button>
+        <input type="password" id="pass-code" class="secret-input" placeholder="ACCESS CODE" maxlength="4">
+        
+        <div class="btn-group">
+            <button id="btn-1" class="btn-switch active" onclick="changeSource('iplist.csv', this)">iplist.csv</button>
+            <button id="btn-2" class="btn-switch" onclick="changeSource('iplist2.csv', this)">iplist2.csv</button>
+        </div>
     </div>
 
     <div class="grid" id="main-grid"></div>
 
     <script>
+        let currentRawData = ""; // 儲存當前 CSV 內容
+        let currentLimit = 14;   // 預設限制數量
         let intervals = [];
+        let currentFileName = 'iplist.csv';
 
-        // 頁面開啟時預設抓取 iplist.csv
         window.onload = () => {
-            fetchCsv('iplist.csv');
+            fetchCsv(currentFileName);
         };
 
-        // 按鈕切換邏輯
-        function switchCsv(fileName, btnElement) {
-            // 更新按鈕樣式
-            document.querySelectorAll('.btn-switch').forEach(btn => btn.classList.remove('active'));
-            btnElement.classList.add('active');
-            
-            // 抓取新的檔案
-            fetchCsv(fileName);
+        // 監聽密碼輸入框
+        document.getElementById('pass-code').addEventListener('input', function(e) {
+            if (e.target.value === "0909") {
+                currentLimit = 16;
+                document.getElementById('status-msg').innerText = "權限已解鎖：顯示 16 個節點";
+                e.target.style.borderColor = "var(--green)";
+            } else {
+                currentLimit = 14;
+                e.target.style.borderColor = "var(--border)";
+            }
+            // 只要輸入改變就重新解析當前數據
+            if (currentRawData) parseAndStart(currentRawData);
+        });
+
+        function changeSource(name, btn) {
+            currentFileName = name;
+            document.querySelectorAll('.btn-switch').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            fetchCsv(name);
         }
 
         async function fetchCsv(url) {
             try {
                 const res = await fetch(url);
-                if (!res.ok) throw new Error("找不到檔案");
                 const text = await res.text();
-                document.getElementById('status-msg').innerText = `目前讀取: ${url}`;
+                currentRawData = text; // 存起來供解鎖時切換
+                document.getElementById('status-msg').innerText = `目前讀取: ${url} (顯示前 ${currentLimit} 筆)`;
                 parseAndStart(text);
             } catch (err) {
-                document.getElementById('status-msg').innerText = `錯誤: 無法讀取 ${url}，請確認檔案是否存在於同資料夾。`;
-                document.getElementById('main-grid').innerHTML = ''; // 出錯時清空
+                document.getElementById('status-msg').innerText = "讀取 CSV 失敗";
             }
         }
 
         function parseAndStart(csvText) {
-            // 清除舊的監控計時器，避免疊加
             intervals.forEach(clearInterval);
             intervals = [];
 
             const lines = csvText.split('\n');
-            // 解析 CSV：跳過第一行，拆分名稱與IP
             const nodes = lines.slice(1)
                 .map(line => line.split(','))
                 .filter(parts => parts.length >= 1)
-                .map(parts => {
-                    // 如果 CSV 只有一欄(IP)，則名稱也顯示 IP
-                    const name = parts[0] ? parts[0].trim() : "Unknown";
-                    const ip = parts[1] ? parts[1].trim().replace(/\s/g, '') : parts[0].trim().replace(/\s/g, '');
-                    return { name, ip };
-                })
-                .slice(0, 16);
+                .map(parts => ({
+                    name: parts[0].trim(),
+                    ip: (parts[1] || parts[0]).trim().replace(/\s/g, '')
+                }))
+                .slice(0, currentLimit); // 使用動態限制數量 (14 或 16)
 
             render(nodes);
         }
@@ -143,9 +153,7 @@
         function render(nodes) {
             const grid = document.getElementById('main-grid');
             grid.innerHTML = '';
-
-            for (let i = 0; i < 16; i++) {
-                const node = nodes[i] || { name: "未配置", ip: "0.0.0.0" };
+            nodes.forEach((node, i) => {
                 grid.innerHTML += `
                     <div class="card">
                         <span class="nickname">${node.name}</span>
@@ -155,38 +163,28 @@
                         <div class="stat">上傳: <span class="val" id="u-${i}">--</span></div>
                     </div>
                 `;
-                if (nodes[i] && node.ip !== "0.0.0.0" && !node.ip.includes("ip")) {
-                    startMonitoring(node.ip, i);
-                }
-            }
+                startMonitoring(node.ip, i);
+            });
         }
 
-        function startMonitoring(ip, i) {
+        async function startMonitoring(ip, i) {
             const run = async () => {
                 const pElem = document.getElementById(`p-${i}`);
                 if (!pElem) return;
-
                 const start = performance.now();
                 try {
-                    // 探測延遲
                     await fetch(`https://dns.google/resolve?name=google.com&ip=${ip}`, { mode: 'no-cors', cache: 'no-cache' });
                     const rtt = Math.round(performance.now() - start);
-
                     pElem.innerText = rtt + " ms";
                     pElem.className = (rtt > 100) ? "val alert" : "val stable";
-                    
-                    // 模擬下載/上傳速度
-                    document.getElementById(`d-${i}`).innerText = (Math.max(5, 500 - rtt) + Math.random() * 30).toFixed(1) + " M";
-                    document.getElementById(`u-${i}`).innerText = (Math.max(2, 120 - rtt * 0.2) + Math.random() * 10).toFixed(1) + " M";
+                    document.getElementById(`d-${i}`).innerText = (Math.max(5, 500-rtt) + Math.random()*20).toFixed(1) + " M";
+                    document.getElementById(`u-${i}`).innerText = (Math.max(2, 100-rtt*0.1) + Math.random()*5).toFixed(1) + " M";
                 } catch {
-                    pElem.innerText = "Error";
-                    pElem.className = "val alert";
+                    pElem.innerText = "Error"; pElem.className = "val alert";
                 }
             };
-
             run();
-            const timer = setInterval(run, 5000); // 5秒刷新一次
-            intervals.push(timer);
+            intervals.push(setInterval(run, 5000));
         }
     </script>
 </body>
