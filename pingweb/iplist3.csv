@@ -1,0 +1,17 @@
+name,ip
+AdGuard,https://dns.adguard-dns.com/dns-query
+CleanBrowsing,https://doh.cleanbrowsing.org/doh/family-filter/
+Cloudflare,https://cloudflare-dns.com/dns-query
+Google Public,https://dns.google/dns-query
+OpenDNS,https://doh.opendns.com/dns-query
+OpenNIC,
+Quad9,https://dns.quad9.net/dns-query
+Yandex,https://common.dns.yandex.net/dns-query
+Quad101_Twnic,https://dns.twnic.tw/dns-query
+Alibaba_Cloud,https://dns.alidns.com/dns-query
+Tencent,https://doh.pub/dns-query
+114DNS,
+HomeplusDigital,
+ChunghwaTelecom,
+NextDNS-Lazy,https://dns.nextdns.io/6fad4a
+NextDNS-Diligent,https://dns.nextdns.io/e24a68

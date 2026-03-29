@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>16-Node Network Monitor (Hidden Access)</title>
+    <title>Network Monitor - Realtime Data</title>
     <style>
         :root {
             --bg: #0d1117;
@@ -13,178 +13,192 @@
             --border: #30363d;
             --red: #f85149;
             --green: #3fb950;
+            --gold: #d29922;
         }
 
         body { 
             background: var(--bg); color: var(--text); 
-            font-family: -apple-system, sans-serif; 
+            font-family: -apple-system, system-ui, sans-serif; 
             margin: 0; padding: 15px; 
             display: flex; flex-direction: column; align-items: center;
         }
 
-        .header { text-align: center; margin-bottom: 10px; }
-        #status-msg { font-size: 12px; color: #8b949e; margin-bottom: 10px; }
+        .header { text-align: center; margin-bottom: 20px; }
+        #status-msg { font-size: 13px; color: #8b949e; margin-bottom: 15px; }
 
-        /* 輸入框與控制區 */
         .controls { 
-            margin-bottom: 20px; 
-            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            margin-bottom: 25px; 
+            display: flex; flex-direction: column; align-items: center; gap: 12px;
+            width: 100%;
         }
 
         .secret-input {
-            background: #21262d;
-            border: 1px solid var(--border);
-            color: var(--accent);
-            padding: 8px;
-            border-radius: 6px;
-            text-align: center;
-            outline: none;
-            width: 120px;
-            font-family: monospace;
+            background: #21262d; border: 1px solid var(--border);
+            color: var(--accent); padding: 8px; border-radius: 6px;
+            text-align: center; outline: none; width: 140px;
+            font-family: monospace; transition: 0.3s;
         }
         .secret-input:focus { border-color: var(--accent); }
 
-        .btn-group { display: flex; gap: 8px; }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
         .btn-switch {
             background-color: #21262d; border: 1px solid var(--border);
-            color: #8b949e; padding: 8px 15px; border-radius: 6px;
-            cursor: pointer; font-size: 13px;
+            color: #8b949e; padding: 10px 20px; border-radius: 6px;
+            cursor: pointer; font-size: 13px; transition: 0.2s;
         }
-        .btn-switch.active { border-color: var(--accent); color: var(--accent); }
+        .btn-switch.active { border-color: var(--accent); color: var(--accent); background: rgba(88,166,255,0.1); }
 
-        /* RWD 網格 */
         .grid { 
             display: grid; grid-template-columns: repeat(4, 1fr); 
-            gap: 12px; width: 100%; max-width: 1200px; 
+            gap: 15px; width: 100%; max-width: 1200px; 
         }
         @media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
 
         .card { 
             background: var(--card); border: 1px solid var(--border); 
-            padding: 15px; border-radius: 8px; 
+            padding: 18px; border-radius: 10px; position: relative;
+            transition: 0.2s;
         }
-        .nickname { color: #fff; font-weight: bold; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .ip-addr { color: var(--accent); font-size: 0.85em; font-family: monospace; margin-bottom: 10px; display: block; border-bottom: 1px solid var(--border); padding-bottom: 5px;}
-        .stat { display: flex; justify-content: space-between; font-size: 0.9em; margin: 4px 0; }
-        .val { color: #fff; font-family: monospace; }
-        .alert { color: var(--red) !important; font-weight: bold; }
+        .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+        
+        .nickname { color: #fff; font-weight: bold; font-size: 1.1em; margin-bottom: 4px; display: block; }
+        .target-addr { color: var(--accent); font-size: 0.8em; font-family: monospace; opacity: 0.7; word-break: break-all; margin-bottom: 12px; display: block; }
+        
+        .stat { display: flex; justify-content: space-between; font-size: 0.95em; margin: 8px 0; border-top: 1px solid #21262d; padding-top: 8px; }
+        .label { color: #8b949e; }
+        .val { color: #fff; font-weight: 500; font-family: 'Consolas', monospace; }
+        
+        .badge {
+            position: absolute; top: 12px; right: 12px;
+            font-size: 10px; padding: 2px 6px; border-radius: 4px;
+            background: #30363d;
+        }
+        .badge-doh { background: rgba(210, 153, 34, 0.2); color: var(--gold); border: 1px solid var(--gold); }
+
+        .alert { color: var(--red) !important; }
         .stable { color: var(--green); }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h2>網路節點監控系統</h2>
-        <div id="status-msg">正在載入數據...</div>
+        <h2>真實數據網路監控儀</h2>
+        <div id="status-msg">載入中...</div>
     </div>
 
     <div class="controls">
-        <input type="password" id="pass-code" class="secret-input" placeholder="ACCESS CODE" maxlength="4">
-        
+        <input type="password" id="pass-code" class="secret-input" placeholder="解鎖碼" maxlength="4">
         <div class="btn-group">
-            <button id="btn-1" class="btn-switch active" onclick="changeSource('iplist.csv', this)">iplist.csv</button>
-            <button id="btn-2" class="btn-switch" onclick="changeSource('iplist2.csv', this)">iplist2.csv</button>
+            <button class="btn-switch active" onclick="changeSource('iplist.csv', this)">節點清單 1</button>
+            <button class="btn-switch" onclick="changeSource('iplist2.csv', this)">節點清單 2</button>
+            <button class="btn-switch" onclick="changeSource('iplist3.csv', this)">DoH 加密解析</button>
         </div>
     </div>
 
-    <div class="grid" id="main-grid"></div>
+    <div id="main-grid" class="grid"></div>
 
     <script>
-        let currentRawData = ""; // 儲存當前 CSV 內容
-        let currentLimit = 14;   // 預設限制數量
+        let currentLimit = 14;
         let intervals = [];
-        let currentFileName = 'iplist.csv';
+        let currentRawData = "";
 
-        window.onload = () => {
-            fetchCsv(currentFileName);
-        };
+        window.onload = () => fetchCsv('iplist.csv');
 
-        // 監聽密碼輸入框
         document.getElementById('pass-code').addEventListener('input', function(e) {
             if (e.target.value === "0909") {
                 currentLimit = 16;
-                document.getElementById('status-msg').innerText = "權限已解鎖：顯示 16 個節點";
-                e.target.style.borderColor = "var(--green)";
-            } else {
-                currentLimit = 14;
-                e.target.style.borderColor = "var(--border)";
+                this.style.borderColor = "var(--green)";
+                if (currentRawData) parseAndStart(currentRawData);
             }
-            // 只要輸入改變就重新解析當前數據
-            if (currentRawData) parseAndStart(currentRawData);
         });
 
+        async function fetchCsv(url) {
+            try {
+                const res = await fetch(url);
+                currentRawData = await res.text();
+                document.getElementById('status-msg').innerText = `目前監控: ${url}`;
+                parseAndStart(currentRawData);
+            } catch (err) {
+                document.getElementById('status-msg').innerText = "檔案讀取失敗";
+            }
+        }
+
         function changeSource(name, btn) {
-            currentFileName = name;
             document.querySelectorAll('.btn-switch').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             fetchCsv(name);
         }
 
-        async function fetchCsv(url) {
-            try {
-                const res = await fetch(url);
-                const text = await res.text();
-                currentRawData = text; // 存起來供解鎖時切換
-                document.getElementById('status-msg').innerText = `目前讀取: ${url} (顯示前 ${currentLimit} 筆)`;
-                parseAndStart(text);
-            } catch (err) {
-                document.getElementById('status-msg').innerText = "讀取 CSV 失敗";
-            }
-        }
-
         function parseAndStart(csvText) {
             intervals.forEach(clearInterval);
             intervals = [];
-
-            const lines = csvText.split('\n');
-            const nodes = lines.slice(1)
-                .map(line => line.split(','))
-                .filter(parts => parts.length >= 1)
-                .map(parts => ({
-                    name: parts[0].trim(),
-                    ip: (parts[1] || parts[0]).trim().replace(/\s/g, '')
-                }))
-                .slice(0, currentLimit); // 使用動態限制數量 (14 或 16)
-
-            render(nodes);
-        }
-
-        function render(nodes) {
             const grid = document.getElementById('main-grid');
             grid.innerHTML = '';
+
+            const lines = csvText.trim().split('\n').slice(1);
+            const nodes = lines.map(line => {
+                const p = line.split(',');
+                const target = (p[1] || p[0]).trim();
+                return { name: p[0].trim(), target: target, isDoH: target.startsWith('http') };
+            }).slice(0, currentLimit);
+
             nodes.forEach((node, i) => {
                 grid.innerHTML += `
                     <div class="card">
+                        <span class="badge ${node.isDoH ? 'badge-doh' : ''}">${node.isDoH ? 'DoH' : 'Real-IP'}</span>
                         <span class="nickname">${node.name}</span>
-                        <span class="ip-addr">${node.ip}</span>
-                        <div class="stat">延遲: <span class="val" id="p-${i}">--</span></div>
-                        <div class="stat">下載: <span class="val" id="d-${i}">--</span></div>
-                        <div class="stat">上傳: <span class="val" id="u-${i}">--</span></div>
+                        <span class="target-addr">${node.target}</span>
+                        <div class="stat"><span class="label">真實延遲</span><span class="val" id="p-${i}">--</span></div>
+                        <div class="stat"><span class="label">連線狀態</span><span class="val" id="s-${i}">--</span></div>
                     </div>
                 `;
-                startMonitoring(node.ip, i);
+                monitorNode(node, i);
             });
         }
 
-        async function startMonitoring(ip, i) {
-            const run = async () => {
+        async function monitorNode(node, i) {
+            const runTest = async () => {
                 const pElem = document.getElementById(`p-${i}`);
+                const sElem = document.getElementById(`s-${i}`);
                 if (!pElem) return;
+
                 const start = performance.now();
                 try {
-                    await fetch(`https://dns.google/resolve?name=google.com&ip=${ip}`, { mode: 'no-cors', cache: 'no-cache' });
-                    const rtt = Math.round(performance.now() - start);
-                    pElem.innerText = rtt + " ms";
-                    pElem.className = (rtt > 100) ? "val alert" : "val stable";
-                    document.getElementById(`d-${i}`).innerText = (Math.max(5, 500-rtt) + Math.random()*20).toFixed(1) + " M";
-                    document.getElementById(`u-${i}`).innerText = (Math.max(2, 100-rtt*0.1) + Math.random()*5).toFixed(1) + " M";
-                } catch {
-                    pElem.innerText = "Error"; pElem.className = "val alert";
+                    if (node.isDoH) {
+                        // 【真實 DoH 數據】發送真實 DNS 請求
+                        const response = await fetch(`${node.target}?name=google.com&type=A`, {
+                            method: 'GET',
+                            headers: { 'Accept': 'application/dns-json' },
+                            mode: 'cors'
+                        });
+                        if (!response.ok) throw new Error();
+                        const rtt = Math.round(performance.now() - start);
+                        pElem.innerText = rtt + " ms";
+                        pElem.className = rtt > 200 ? "val alert" : "val stable";
+                        sElem.innerText = "已解析 (OK)";
+                    } else {
+                        // 【真實 IP 數據】使用 Fetch 捕捉連線延遲
+                        // 這種方式獲取的是真實的網路往返時間
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 3000);
+                        
+                        await fetch(`https://${node.target}`, { mode: 'no-cors', signal: controller.signal });
+                        
+                        clearTimeout(timeoutId);
+                        const rtt = Math.round(performance.now() - start);
+                        pElem.innerText = rtt + " ms";
+                        pElem.className = rtt > 150 ? "val alert" : "val stable";
+                        sElem.innerText = "在線 (Online)";
+                    }
+                } catch (e) {
+                    pElem.innerText = "逾時";
+                    pElem.className = "val alert";
+                    sElem.innerText = "離線/攔截";
                 }
             };
-            run();
-            intervals.push(setInterval(run, 5000));
+            runTest();
+            intervals.push(setInterval(runTest, 5000));
         }
     </script>
 </body>
