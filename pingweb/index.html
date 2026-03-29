@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Network Monitor - Realtime Data</title>
+    <title>Network Monitor - Professional Simulation</title>
     <style>
         :root {
             --bg: #0d1117;
@@ -65,7 +65,7 @@
         .nickname { color: #fff; font-weight: bold; font-size: 1.1em; margin-bottom: 4px; display: block; }
         .target-addr { color: var(--accent); font-size: 0.8em; font-family: monospace; opacity: 0.7; word-break: break-all; margin-bottom: 12px; display: block; }
         
-        .stat { display: flex; justify-content: space-between; font-size: 0.95em; margin: 8px 0; border-top: 1px solid #21262d; padding-top: 8px; }
+        .stat { display: flex; justify-content: space-between; font-size: 0.9em; margin: 8px 0; border-top: 1px solid #21262d; padding-top: 8px; }
         .label { color: #8b949e; }
         .val { color: #fff; font-weight: 500; font-family: 'Consolas', monospace; }
         
@@ -83,16 +83,16 @@
 <body>
 
     <div class="header">
-        <h2>真實數據網路監控儀</h2>
-        <div id="status-msg">載入中...</div>
+        <h2>網路節點監控儀 (模擬模式)</h2>
+        <div id="status-msg">初始化中...</div>
     </div>
 
     <div class="controls">
-        <input type="password" id="pass-code" class="secret-input" placeholder="解鎖碼" maxlength="4">
+        <input type="password" id="pass-code" class="secret-input" placeholder="驗證碼" maxlength="4">
         <div class="btn-group">
-            <button class="btn-switch active" onclick="changeSource('iplist.csv', this)">節點清單 1</button>
-            <button class="btn-switch" onclick="changeSource('iplist2.csv', this)">節點清單 2</button>
-            <button class="btn-switch" onclick="changeSource('iplist3.csv', this)">DoH 加密解析</button>
+            <button class="btn-switch active" onclick="changeSource('iplist.csv', this)">清單 1</button>
+            <button class="btn-switch" onclick="changeSource('iplist2.csv', this)">清單 2</button>
+            <button class="btn-switch" onclick="changeSource('iplist3.csv', this)">DoH 模式</button>
         </div>
     </div>
 
@@ -105,6 +105,7 @@
 
         window.onload = () => fetchCsv('iplist.csv');
 
+        // 解鎖邏輯
         document.getElementById('pass-code').addEventListener('input', function(e) {
             if (e.target.value === "0909") {
                 currentLimit = 16;
@@ -117,10 +118,10 @@
             try {
                 const res = await fetch(url);
                 currentRawData = await res.text();
-                document.getElementById('status-msg').innerText = `目前監控: ${url}`;
+                document.getElementById('status-msg').innerText = `正在監控: ${url}`;
                 parseAndStart(currentRawData);
             } catch (err) {
-                document.getElementById('status-msg').innerText = "檔案讀取失敗";
+                document.getElementById('status-msg').innerText = "讀取失敗";
             }
         }
 
@@ -149,7 +150,9 @@
                         <span class="badge ${node.isDoH ? 'badge-doh' : ''}">${node.isDoH ? 'DoH' : 'Real-IP'}</span>
                         <span class="nickname">${node.name}</span>
                         <span class="target-addr">${node.target}</span>
-                        <div class="stat"><span class="label">真實延遲</span><span class="val" id="p-${i}">--</span></div>
+                        <div class="stat"><span class="label">延遲 (RTT)</span><span class="val" id="p-${i}">--</span></div>
+                        <div class="stat"><span class="label">上傳速度</span><span class="val" id="u-${i}">--</span></div>
+                        <div class="stat"><span class="label">下載速度</span><span class="val" id="d-${i}">--</span></div>
                         <div class="stat"><span class="label">連線狀態</span><span class="val" id="s-${i}">--</span></div>
                     </div>
                 `;
@@ -158,47 +161,51 @@
         }
 
         async function monitorNode(node, i) {
-            const runTest = async () => {
+            const run = async () => {
                 const pElem = document.getElementById(`p-${i}`);
+                const uElem = document.getElementById(`u-${i}`);
+                const dElem = document.getElementById(`d-${i}`);
                 const sElem = document.getElementById(`s-${i}`);
                 if (!pElem) return;
 
                 const start = performance.now();
                 try {
-                    if (node.isDoH) {
-                        // 【真實 DoH 數據】發送真實 DNS 請求
-                        const response = await fetch(`${node.target}?name=google.com&type=A`, {
-                            method: 'GET',
-                            headers: { 'Accept': 'application/dns-json' },
-                            mode: 'cors'
-                        });
-                        if (!response.ok) throw new Error();
-                        const rtt = Math.round(performance.now() - start);
-                        pElem.innerText = rtt + " ms";
-                        pElem.className = rtt > 200 ? "val alert" : "val stable";
-                        sElem.innerText = "已解析 (OK)";
-                    } else {
-                        // 【真實 IP 數據】使用 Fetch 捕捉連線延遲
-                        // 這種方式獲取的是真實的網路往返時間
-                        const controller = new AbortController();
-                        const timeoutId = setTimeout(() => controller.abort(), 3000);
-                        
-                        await fetch(`https://${node.target}`, { mode: 'no-cors', signal: controller.signal });
-                        
-                        clearTimeout(timeoutId);
-                        const rtt = Math.round(performance.now() - start);
-                        pElem.innerText = rtt + " ms";
-                        pElem.className = rtt > 150 ? "val alert" : "val stable";
-                        sElem.innerText = "在線 (Online)";
-                    }
+                    // 發送輕量探針
+                    const url = node.isDoH ? `${node.target}?name=google.com` : `https://${node.target}`;
+                    await fetch(url, { mode: 'no-cors', cache: 'no-cache' });
+                    
+                    const rtt = Math.round(performance.now() - start);
+                    pElem.innerText = rtt + " ms";
+                    pElem.className = rtt > 150 ? "val alert" : "val stable";
+
+                    // --- 模擬邏輯還原 ---
+                    // 下載速度隨延遲變化：延遲越低，速度越高
+                    const baseDown = Math.max(20, 600 - rtt);
+                    const mockDown = (baseDown + Math.random() * 50).toFixed(1);
+                    dElem.innerText = mockDown + " Mbps";
+
+                    // 上傳速度模擬
+                    const baseUp = Math.max(10, 150 - rtt * 0.2);
+                    const mockUp = (baseUp + Math.random() * 10).toFixed(1);
+                    uElem.innerText = mockUp + " Mbps";
+
+                    sElem.innerText = "穩定";
+                    sElem.className = "val stable";
+
                 } catch (e) {
-                    pElem.innerText = "逾時";
+                    pElem.innerText = "Timeout";
                     pElem.className = "val alert";
-                    sElem.innerText = "離線/攔截";
+                    dElem.innerText = "0.0 Mbps";
+                    uElem.innerText = "0.0 Mbps";
+                    sElem.innerText = "攔截/離線";
+                    sElem.className = "val alert";
                 }
             };
-            runTest();
-            intervals.push(setInterval(runTest, 5000));
+
+            run();
+            // 恢復原本較快的更新頻率 (5秒)
+            const interval = setInterval(run, 5000);
+            intervals.push(interval);
         }
     </script>
 </body>
