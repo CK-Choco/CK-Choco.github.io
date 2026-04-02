@@ -4,7 +4,7 @@
 [電阻計算](https://CK-Choco.github.io/web/Tools/resistance.html)  
 [時區切換](https://CK-Choco.github.io/web/Tools/clock/TimeZone.html)  
 [鬧鐘](https://CK-Choco.github.io/web/Tools/clock/CountdownTimer.html)     
-[倒數計時器](https://CK-Choco.github.io/web/Tools/clock/holiday_countdown/index.html)  
+[節日倒數](https://CK-Choco.github.io/web/Tools/clock/holiday_countdown/index.html)  
 [網路延遲](https://CK-Choco.github.io/web/Tools/pingweb/index.html)  
 ### 娛樂
 [敲木魚](https://CK-Choco.github.io/web/Entertainment/wood/index.html)  
