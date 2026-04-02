@@ -12,7 +12,7 @@
 [羅盤時間](https://CK-Choco.github.io/web/Tools/clock/compass_time/compass.html)  
 [羅盤時間 ver2.0](https://CK-Choco.github.io/web/Tools/clock/compass_time/compass2.html)  
 ###########  
-[<img src="https://s18955.pcdn.co/wp-content/uploads/2018/02/github.png" width="35"/>]()  
+[<img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="35"/>]()
 [<img src="https://about.gitlab.com/images/press/logo/png/gitlab-icon-rgb.png" width="35" alt="GitLab"/>]()  
 ###########
 
