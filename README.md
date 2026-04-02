@@ -17,4 +17,4 @@
 
 ### 棄案
 ~~[UI 1.0](https://CK-Choco.github.io/web/UI/1.0.html)~~  
-~~[UI 2.0](https://CK-Choco.github.io/web/UI2.0.html)~~  
+~~[UI 2.0](https://CK-Choco.github.io/web/UI/2.0.html)~~  
