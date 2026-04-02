@@ -1,20 +1,20 @@
 ### 首頁
-[UI 3.0](https://CK-Choco.github.io/UI/3.0.html)  
+[UI 3.0](https://CK-Choco.github.io/web/UI/3.0.html)  
 ### 工具
-[電阻計算](https://CK-Choco.github.io/resistance.html)  
-[時區切換](https://CK-Choco.github.io/clock/TimeZone.html)  
-[鬧鐘](https://CK-Choco.github.io/clock/CountdownTimer.html)     
-[倒數計時器](https://CK-Choco.github.io/countdown_timer/index.html)  
-[網路延遲](https://CK-Choco.github.io/pingweb/index.html)  
+[電阻計算](https://CK-Choco.github.io/web/Tools/resistance.html)  
+[時區切換](https://CK-Choco.github.io/web/Tools/clock/TimeZone.html)  
+[鬧鐘](https://CK-Choco.github.io/web/Tools/clock/CountdownTimer.html)     
+[倒數計時器](https://CK-Choco.github.io/web/Tools/clock/holiday_countdown/index.html)  
+[網路延遲](https://CK-Choco.github.io/web/Tools/pingweb/index.html)  
 ### 娛樂
-[敲木魚](https://CK-Choco.github.io/wood/index.html)  
+[敲木魚](https://CK-Choco.github.io/web/Entertainment/wood/index.html)  
 ### 好玩
-[羅盤時間](https://CK-Choco.github.io/clock/compass.html)  
-[羅盤時間 ver2.0](https://CK-Choco.github.io/clock/compass2.html)  
+[羅盤時間](https://CK-Choco.github.io/web/Tools/clock/compass_time/compass.html)  
+[羅盤時間 ver2.0](https://CK-Choco.github.io/web/Tools/clock/compass_time/compass2.html)  
 ###########  
 [<img src="https://s18955.pcdn.co/wp-content/uploads/2018/02/github.png" width="35"/>]()  
 ###########
 
 ### 棄案
-~~[UI 1.0](https://CK-Choco.github.io/UI/1.0.html)~~  
-~~[UI 2.0](https://CK-Choco.github.io/UI/2.0.html)~~  
+~~[UI 1.0](https://CK-Choco.github.io/web/UI/1.0.html)~~  
+~~[UI 2.0](https://CK-Choco.github.io/web/UI2.0.html)~~  

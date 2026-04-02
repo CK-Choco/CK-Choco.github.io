@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>全尺寸鍵盤效能測試器</title>
+    <style>
+        :root {
+            --kb-bg: #fff8e1;
+            --key-bg: #fbf0cf;
+            --key-active: #57ec9d;
+            --key-pressed: #bef8d7;
+            --border: #e2dabf;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background-color: #f0f2f5; 
+            font-family: "Microsoft JhengHei", sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 20px; 
+        }
+
+        .container { 
+            background: var(--kb-bg); 
+            padding: 30px; 
+            border: 1px solid #dcdcdc; 
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            display: inline-block;
+        }
+
+        h2 { margin-bottom: 5px; font-size: 24px; }
+        .desc { color: #666; margin-bottom: 20px; font-size: 14px; }
+
+        /* 數據面板 */
+        .dashboard { display: flex; gap: 15px; margin-bottom: 25px; }
+        .stat-card { 
+            background: #fff; 
+            padding: 12px 25px; 
+            border-radius: 8px; 
+            border: 1px solid #eee; 
+            flex: 1; 
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .stat-label { font-size: 12px; color: #999; display: block; }
+        .stat-value { font-size: 26px; font-weight: 800; font-family: monospace; color: #333; }
+
+        /* 鍵盤佈局控制 */
+        .kb-layout { display: flex; gap: 25px; align-items: flex-start; }
+        .main-group { display: flex; flex-direction: column; gap: 6px; }
+        .function-row { display: flex; gap: 6px; margin-bottom: 12px; }
+        .alpha-rows { display: flex; flex-direction: column; gap: 6px; }
+        .row { display: flex; gap: 6px; }
+
+        /* 右側分區 */
+        .right-group { display: flex; gap: 20px; }
+        .edit-section { display: flex; flex-direction: column; gap: 6px; }
+        .numpad-section { display: grid; grid-template-columns: repeat(4, 46px); gap: 6px; }
+
+        /* 按鍵基礎樣式 */
+        .key {
+            background: var(--key-bg); 
+            border: 1px solid var(--border); 
+            border-radius: 5px;
+            height: 46px; 
+            min-width: 46px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 12px; 
+            color: #444;
+            transition: background 0.05s, transform 0.05s;
+            text-align: center;
+            padding: 0 4px;
+        }
+
+        .key.active { background: var(--key-active) !important; transform: translateY(2px); font-weight: bold; }
+        .key.pressed { background: var(--key-pressed); }
+
+        /* 精確寬度類別 */
+        .w-1-25 { min-width: 58px; } 
+        .w-1-5 { min-width: 72px; }  
+        .w-1-75 { min-width: 84px; } 
+        .w-2 { min-width: 98px; }    
+        .w-2-25 { min-width: 110px; } 
+        .w-2-75 { min-width: 135px; } 
+        .w-space { min-width: 295px; }
+        .h-2 { height: 98px; grid-row: span 2; } 
+        .span-2 { grid-column: span 2; min-width: 98px; }
+
+        .spacer-sm { width: 15px; }
+        .spacer-md { height: 25px; }
+
+        /* 按鈕區 */
+        .footer { margin-top: 30px; display: flex; gap: 10px; }
+        button {
+            padding: 10px 20px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover { background: #f9f9f9; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>按鍵測試 (全尺寸)</h2>
+    <p class="desc">按下鍵盤上的按鍵檢測功能是否正常。支援多鍵齊發與延遲偵測。</p>
+
+    <div class="dashboard">
+        <div class="stat-card">
+            <span class="stat-label">多鍵齊發 (Ghosting)</span>
+            <span id="ghosting" class="stat-value">0</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">輸入延遲 (Input Lag)</span>
+            <span id="lag" class="stat-value">0.00</span> <small>ms</small>
+        </div>
+    </div>
+
+    <div class="kb-layout">
+        <div class="main-group">
+            <div class="function-row">
+                <div class="key" id="Escape">Esc</div>
+                <div class="spacer-sm"></div>
+                <div class="key" id="F1">F1</div><div class="key" id="F2">F2</div><div class="key" id="F3">F3</div><div class="key" id="F4">F4</div>
+                <div class="spacer-sm"></div>
+                <div class="key" id="F5">F5</div><div class="key" id="F6">F6</div><div class="key" id="F7">F7</div><div class="key" id="F8">F8</div>
+                <div class="spacer-sm"></div>
+                <div class="key" id="F9">F9</div><div class="key" id="F10">F10</div><div class="key" id="F11">F11</div><div class="key" id="F12">F12</div>
+            </div>
+            
+            <div class="alpha-rows">
+                <div class="row">
+                    <div class="key" id="Backquote">`</div><div class="key" id="Digit1">1</div><div class="key" id="Digit2">2</div><div class="key" id="Digit3">3</div><div class="key" id="Digit4">4</div><div class="key" id="Digit5">5</div><div class="key" id="Digit6">6</div><div class="key" id="Digit7">7</div><div class="key" id="Digit8">8</div><div class="key" id="Digit9">9</div><div class="key" id="Digit0">0</div><div class="key" id="Minus">-</div><div class="key" id="Equal">=</div><div class="key w-2" id="Backspace">Backspace</div>
+                </div>
+                <div class="row">
+                    <div class="key w-1-5" id="Tab">Tab</div><div class="key" id="KeyQ">Q</div><div class="key" id="KeyW">W</div><div class="key" id="KeyE">E</div><div class="key" id="KeyR">R</div><div class="key" id="KeyT">T</div><div class="key" id="KeyY">Y</div><div class="key" id="KeyU">U</div><div class="key" id="KeyI">I</div><div class="key" id="KeyO">O</div><div class="key" id="KeyP">P</div><div class="key" id="BracketLeft">[</div><div class="key" id="BracketRight">]</div><div class="key w-1-5" id="Backslash">\</div>
+                </div>
+                <div class="row">
+                    <div class="key w-1-75" id="CapsLock">Caps</div><div class="key" id="KeyA">A</div><div class="key" id="KeyS">S</div><div class="key" id="KeyD">D</div><div class="key" id="KeyF">F</div><div class="key" id="KeyG">G</div><div class="key" id="KeyH">H</div><div class="key" id="KeyJ">J</div><div class="key" id="KeyK">K</div><div class="key" id="KeyL">L</div><div class="key" id="Semicolon">;</div><div class="key" id="Quote">'</div><div class="key w-2-25" id="Enter">Enter</div>
+                </div>
+                <div class="row">
+                    <div class="key w-2-25" id="ShiftLeft">Shift</div><div class="key" id="KeyZ">Z</div><div class="key" id="KeyX">X</div><div class="key" id="KeyC">C</div><div class="key" id="KeyV">V</div><div class="key" id="KeyB">B</div><div class="key" id="KeyN">N</div><div class="key" id="KeyM">M</div><div class="key" id="Comma">,</div><div class="key" id="Period">.</div><div class="key" id="Slash">/</div><div class="key w-2-75" id="ShiftRight">Shift</div>
+                </div>
+                <div class="row">
+                    <div class="key w-1-25" id="ControlLeft">Ctrl</div><div class="key w-1-25" id="MetaLeft">Win</div><div class="key w-1-25" id="AltLeft">Alt</div><div class="key w-space" id="Space">Space</div><div class="key w-1-25" id="AltRight">Alt</div><div class="key w-1-25" id="MetaRight">Win</div><div class="key w-1-25" id="ContextMenu">Menu</div><div class="key w-1-25" id="ControlRight">Ctrl</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-group">
+            <div class="edit-section">
+                <div class="row"><div class="key" id="PrintScreen">PrtSc</div><div class="key" id="ScrollLock">Scroll</div><div class="key" id="Pause">Pause</div></div>
+                <div class="spacer-md"></div>
+                <div class="row"><div class="key" id="Insert">Ins</div><div class="key" id="Home">Home</div><div class="key" id="PageUp">PgUp</div></div>
+                <div class="row"><div class="key" id="Delete">Del</div><div class="key" id="End">End</div><div class="key" id="PageDown">PgDn</div></div>
+                <div class="spacer-md"></div>
+                <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+                    <div class="key" id="ArrowUp">↑</div>
+                    <div class="row"><div class="key" id="ArrowLeft">←</div><div class="key" id="ArrowDown">↓</div><div class="key" id="ArrowRight">→</div></div>
+                </div>
+            </div>
+
+            <div class="numpad-section">
+                <div class="key" id="NumLock">Num</div><div class="key" id="NumpadDivide">/</div><div class="key" id="NumpadMultiply">*</div><div class="key" id="NumpadSubtract">-</div>
+                <div class="key" id="Numpad7">7</div><div class="key" id="Numpad8">8</div><div class="key" id="Numpad9">9</div><div class="key h-2" id="NumpadAdd">+</div>
+                <div class="key" id="Numpad4">4</div><div class="key" id="Numpad5">5</div><div class="key" id="Numpad6">6</div>
+                <div class="key" id="Numpad1">1</div><div class="key" id="Numpad2">2</div><div class="key" id="Numpad3">3</div><div class="key h-2" id="NumpadEnter">Ent</div>
+                <div class="key span-2" id="Numpad0">0</div><div class="key" id="NumpadDecimal">.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <button onclick="resetKeyboard()">清除狀態 (Reset)</button>
+        <span style="color:#888; font-size: 12px; align-self: center;">* 提示：某些系統快捷鍵 (如 Win) 無法完全攔截是正常現象。</span>
+    </div>
+</div>
+
+<script>
+    const ghostingEl = document.getElementById('ghosting');
+    const lagEl = document.getElementById('lag');
+    const pressed = new Set();
+
+    // 核心監聽邏輯
+    window.addEventListener('keydown', (e) => {
+        // 攔截所有會干擾網頁的快捷鍵
+        if (e.ctrlKey || e.altKey || e.metaKey || e.key.startsWith('F')) {
+            e.preventDefault();
+        }
+        if (["Tab", "Space", "Backspace", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)) {
+            e.preventDefault();
+        }
+
+        pressed.add(e.code);
+        ghostingEl.textContent = pressed.size;
+        
+        // 延遲偵測
+        const lagValue = performance.now() - e.timeStamp;
+        lagEl.textContent = lagValue.toFixed(2);
+
+        // 染色處理
+        const el = document.getElementById(e.code);
+        if (el) {
+            el.classList.add('active');
+            el.classList.add('pressed');
+        }
+    });
+
+    window.addEventListener('keyup', (e) => {
+        pressed.delete(e.code);
+        ghostingEl.textContent = pressed.size;
+        
+        const el = document.getElementById(e.code);
+        if (el) el.classList.remove('active');
+    });
+
+    // 視窗失去焦點時清空按鍵 (解決 Win 鍵卡死)
+    window.addEventListener('blur', () => {
+        pressed.clear();
+        ghostingEl.textContent = "0";
+        document.querySelectorAll('.key').forEach(k => k.classList.remove('active'));
+    });
+
+    function resetKeyboard() {
+        pressed.clear();
+        ghostingEl.textContent = "0";
+        lagEl.textContent = "0.00";
+        document.querySelectorAll('.key').forEach(k => {
+            k.classList.remove('active');
+            k.classList.remove('pressed');
+        });
+    }
+</script>
+
+</body>
+</html>
