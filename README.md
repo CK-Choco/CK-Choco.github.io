@@ -13,7 +13,7 @@
 [羅盤時間 ver2.0](https://CK-Choco.github.io/web/Tools/clock/compass_time/compass2.html)  
 ###########  
 [<img src="https://s18955.pcdn.co/wp-content/uploads/2018/02/github.png" width="35"/>]()  
-<script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=69ce498dd96a9710bca215cb&product=sop' async='async'></script>
+[<img src="https://about.gitlab.com/images/press/logo/png/gitlab-icon-rgb.png" width="35" alt="GitLab"/>]()  
 ###########
 
 ### 棄案
