@@ -1,0 +1,351 @@
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+
+    color: white;
+}
+
+
+/* 圓形三條線按鈕 */
+.menu-btn {
+    position: fixed;       /* 固定左上角 */
+    top: 20px;
+    left: 20px;
+
+    width: 60px;
+    height: 60px;
+
+    background: #333;
+    border-radius: 50%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+    transition: 0.3s;
+
+    z-index: 100;
+}
+
+
+.menu-btn div {
+    width: 30px;
+    height: 4px;
+
+    background: white;
+
+    margin: 4px;
+    border-radius: 5px;
+
+    transition: 0.3s;
+}
+
+
+/* 點擊後變 X */
+.menu-btn.active div:nth-child(1) {
+    transform: translateY(12px) rotate(45deg);
+}
+
+.menu-btn.active div:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-btn.active div:nth-child(3) {
+    transform: translateY(-12px) rotate(-45deg);
+}
+
+
+/* 展開選單 */
+.menu {
+    position: fixed;
+
+    top: 90px;
+    left: 20px;
+
+    width: 200px;
+
+    background: #222;
+    border-radius: 15px;
+
+    overflow: hidden;
+
+    opacity: 0;
+    transform: scale(0);
+
+    transform-origin: top left;
+
+    transition: 0.3s;
+
+    z-index: 99;
+}
+
+
+/* 開啟 */
+.menu.active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+
+.menu a {
+    display: block;
+
+    color: white;
+
+    padding: 15px;
+
+    text-decoration: none;
+}
+
+
+.menu a:hover {
+    background: #555;
+}
+
+
+/* ================= */
+/* 中央內容框        */
+/* ================= */
+
+.main-box {
+
+    width: 800px;
+    height: auto;
+
+    background: rgba(255,255,255,0.1);
+
+    border-radius: 15px;
+
+    position: fixed;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    color: black;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.url-main-box {
+
+    width: 400px;
+    height: auto;
+
+    background: rgba(255,255,255,0.1);
+
+    border-radius: 15px;
+
+    position: fixed;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    color: black;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.view-main-box {
+
+    width: 500px;
+    height: auto;
+
+    background: rgba(255,255,255,0.1);
+
+    border-radius: 15px;
+
+    position: fixed;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    color: black;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 新增：控制頭像和文字排在同一行，且垂直置中 */
+.profile-header {
+    display: flex;
+    align-items: center; /* 讓頭像和名字上下居中對齊 */
+    gap: 15px;           /* 頭像和名字之間的間距 */
+}
+
+/* 你原本的 icon 設定 */
+.icon {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-left: 10px; /* 如果你有靠左留白的習慣保留，若有 gap 了也可以視情況刪除 */
+}
+
+.view-box {
+	width: 400px;
+	height: auto;
+	overflow:hidden;
+}
+
+.view-box img{
+	max-width: 400px;
+	max-height: auto;
+	width: 100%;
+	height: auto;
+	obhect-fit:cover;
+}
+
+.view-box h3{
+	color:white;
+}
+
+/* 卡片排列區 */
+.url-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+
+}
+
+
+/* 每一個連結卡片 */
+.url-card {
+
+    width: 450px;
+    height: 100px;
+
+    background: white;
+
+    border-radius: 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 15px;
+
+    box-sizing: border-box;
+
+    transition: 0.3s;
+}
+
+
+.url-card {
+    width: 350px;
+    height: 80px;
+
+    display: flex;
+    align-items: center;
+
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+
+    text-decoration: none;
+    color: white;
+
+    padding: 10px;
+}
+
+
+.url-card:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+
+.url-icon {
+    width: 50px;
+    height: 50px;
+
+    border-radius: 50%;
+    margin-left: 10px;
+}
+
+
+.url-text {
+    margin-left: 20px;
+	color:white;
+}
+
+
+.url-title {
+    font-size: 22px;
+    font-weight: bold;
+	color:white;
+}
+
+
+.url-desc {
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+.magic-divider {
+  position: relative;
+  width: 100%;
+  height: 60px; /* 給予足夠的高度容納波折與發光點 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 左半邊的線（含往上折的角） */
+.magic-divider::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 53%; /* 讓左邊的線只延伸到中間偏左一點 */
+  height: 20px;
+  /* 使用 SVG 畫出左半邊的線與上折角 */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 20" preserveAspectRatio="none"><path d="M 0 15 L 470 15 L 495 2" fill="none" stroke="%238cbcd4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: 100% 100%;
+}
+
+/* 右半邊的線（含往下折的角） */
+.magic-divider::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  left: 51%; /* 讓右邊的線從中間偏右一點開始 */
+  height: 20px;
+  /* 使用 SVG 畫出右半邊的線與下折角 */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 20" preserveAspectRatio="none"><path d="M 5 18 L 25 5 L 500 5" fill="none" stroke="%238cbcd4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 100% 100%;
+}
+
+/* 中間那根斜斜的發光魔杖（如果您不需要這根黃線，可以把下面這段整個刪除） */
+.magic-divider::/* 裝飾用 */ {
+  /* 如果想要加上中間那根黃色斜線，可以解開下方的註解 */
+  /*
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 50px;
+  background: linear-gradient(to top, rgba(255,255,255,0), #f9f598 70%, #ffffff);
+  transform: rotate(25deg);
+  box-shadow: 0 0 12px #fdfab3, 0 0 20px #fdfab3;
+  z-index: 2;
+  */
+}

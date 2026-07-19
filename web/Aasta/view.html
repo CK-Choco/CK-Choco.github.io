@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aasta</title>
+
+<link rel="stylesheet" href="config.css">
+<video id="bgVideo" autoplay muted loop src="./一封孤島的信.mp4" 
+       style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -1;">
+</video>
+
+<script src="./script.js"></script>
+</head>
+
+<body>
+
+<!-- 左上角選單 -->
+<div class="menu-btn" onclick="openMenu()">
+    <div></div>
+    <div></div>
+    <div></div>
+</div>
+
+
+<!-- 展開選單 -->
+<div class="menu" id="menu">
+    <a href="./index.html">首頁</a>
+    <a href="./url.html">連結</a>
+    <a href="./view.html">三視圖</a>
+</div>
+
+
+<!-- 中間框 -->
+<div class="view-main-box">
+    
+	<div class="view-box">
+		<h3>1.0</h3>
+		<img src=".\1.0.jpg">
+		<h3>2.0</h3>
+		<img src=".\2.0.jpg">
+		<h3>3.0</h3>
+		<img src=".\3.0.jpg">
+	</div>
+	
+</div>
+
+
+<script>
+function openMenu(){
+    document.querySelector(".menu-btn").classList.toggle("active");
+    document.getElementById("menu").classList.toggle("active");
+}
+</script>
+
+</body>
+</html>

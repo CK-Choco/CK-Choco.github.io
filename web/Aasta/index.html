@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aasta</title>
+
+<link rel="stylesheet" href="config.css">
+<video id="bgVideo" autoplay muted loop src="./太陽與地球.mp4" 
+       style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -1;">
+</video>
+
+<script src="./script.js"></script>
+</head>
+
+<body>
+
+<!-- 左上角選單 -->
+<div class="menu-btn" onclick="openMenu()">
+    <div></div>
+    <div></div>
+    <div></div>
+</div>
+
+
+<!-- 展開選單 -->
+<div class="menu" id="menu">
+    <a href="./index.html">首頁</a>
+    <a href="./url.html">連結</a>
+    <a href="./view.html">三視圖</a>
+</div>
+
+
+<!-- 中間框 -->
+<div class="main-box">
+    
+	<div class="box">
+  <!-- 新增這層 div 把要放在同一行的頭像與名字包起來 -->
+	<h1></h1>
+	<div class="profile-header">
+		<img class="icon" src="https://yt3.googleusercontent.com/7LlSIKWYQcy0EZQHe_0yhuGStd0WgIh7qgbIKvIyDa1rXOeVfNpiU27I3PIgmVIvrgIdXmjkcpU=s240-c-k-c0x00ffffff-no-rj">
+		<h2 style="margin: 0; font-size: 24px; color: white;text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0px 2px 4px rgba(0,0,0,0.8);">阿絲塔Aasta</h2>
+	</div>
+
+  <!-- 下方的自我介紹維持原樣，它會自然地換行排在頭像下面 -->
+  <h3 style="white-space: pre-line; color: #B2A4D4; font-weight: normal; margin-top: 20px; line-height: 1.6; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0px 2px 4px rgba(0,0,0,0.8);">
+大家好！
+我是阿絲塔，是一位在世界各處旅遊的神明！
+平常以哄睡陪伴、文學、音樂為主，希望可以與你們一起共度許多美好的時光✿
+
+☪️贊助塔塔☪️
+✨綠界✨：https://www.riyardigital.com/donate/aasta
+
+另外，如果有問題或是想說的話，都可以投遞棉花糖唷！
+🍭棉花糖：https://reurl.cc/Kbn7ER
+</h3>
+</div>
+	
+</div>
+
+
+<script>
+function openMenu(){
+    document.querySelector(".menu-btn").classList.toggle("active");
+    document.getElementById("menu").classList.toggle("active");
+}
+</script>
+
+</body>
+</html>

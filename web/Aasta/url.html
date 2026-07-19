@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aasta</title>
+
+<link rel="stylesheet" href="config.css">
+<video id="bgVideo" autoplay muted loop src="./星辰於你.mp4" 
+       style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -1;">
+</video>
+
+<script src="./script.js"></script>
+</head>
+
+<body>
+
+<!-- 左上角選單 -->
+<div class="menu-btn" onclick="openMenu()">
+    <div></div>
+    <div></div>
+    <div></div>
+</div>
+
+
+<!-- 展開選單 -->
+<div class="menu" id="menu">
+    <a href="./index.html">首頁</a>
+    <a href="./url.html">連結</a>
+    <a href="./view.html">三視圖</a>
+</div>
+
+
+<!-- 中間框 -->
+<div class="url-main-box">
+    
+	<div class="url-list">
+
+		<a class="url-card" href="https://www.youtube.com/@HanaChou_Aasta">
+			<img class="url-icon" src="https://img.icons8.com/?size=100&id=19318&format=png&color=000000">
+
+			<div class="url-text">
+				<div class="url-title">YouTube</div>
+				<div class="url-desc">主要直播地點</div>
+			</div>
+		</a>
+
+
+		<a class="url-card" href="https://www.youtube.com/@HanaChou_Aasta">
+			<img class="url-icon" src="https://img.icons8.com/?size=100&id=varxo5UeLD14&format=png&color=000000">
+
+			<div class="url-text">
+				<div class="url-title">Twitch</div>
+				<div class="url-desc">備用直播地點</div>
+			</div>
+		</a>
+
+		<div class="magic-divider"></div>
+		
+		<a class="url-card" href="https://www.youtube.com/@HanaChou_Aasta">
+			<img class="url-icon" src="https://img.icons8.com/?size=100&id=vYvO6IJZ4tr0&format=png&color=000000">
+
+			<div class="url-text">
+				<div class="url-title">Plurk</div>
+				<div class="url-desc">噗浪</div>
+			</div>
+		</a>
+
+		<a class="url-card" href="https://www.facebook.com/profile.php?id=100079661377313#">
+			<img class="url-icon" src="https://img.icons8.com/?size=100&id=uLWV5A9vXIPu&format=png&color=000000">
+
+			<div class="url-text">
+				<div class="url-title">FaceBook</div>
+				<div class="url-desc">臉書</div>
+			</div>
+		</a>
+		
+		<a class="url-card" href="https://www.instagram.com/hanachou_aasta">
+			<img class="url-icon" src="https://img.icons8.com/?size=100&id=Xy10Jcu1L2Su&format=png&color=000000">
+
+			<div class="url-text">
+				<div class="url-title">Instagram</div>
+				<div class="url-desc"></div>
+			</div>
+		</a>
+		
+		<a class="url-card" href="https://www.threads.com/@hanachou_aasta">
+			<img class="url-icon" src="https://img.icons8.com/?size=100&id=AS2a6aA9BwK3&format=png&color=000000">
+
+			<div class="url-text">
+				<div class="url-title">Threads</div>
+				<div class="url-desc"></div>
+			</div>
+		</a>
+		<!--
+		<a class="url-card" href="#">
+			<img class="url-icon" src="https://img.icons8.com/?size=100&id=15BvsJZQfWPM&format=png&color=000000">
+
+			<div class="url-text">
+				<div class="url-title">Discord</div>
+				<div class="url-desc">加入我的社群</div>
+			</div>
+		</a>
+		-->
+
+	</div>
+	
+</div>
+
+
+<script>
+function openMenu(){
+    document.querySelector(".menu-btn").classList.toggle("active");
+    document.getElementById("menu").classList.toggle("active");
+}
+</script>
+
+</body>
+</html>
