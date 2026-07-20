@@ -1,3 +1,10 @@
+/* ======================================= */
+/* 頂層全域設定：確保所有尺寸計算包含 Padding */
+/* ======================================= */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     min-height: 100vh;
@@ -7,344 +14,188 @@ body {
     background-attachment: fixed;
 
     color: white;
+
+    /* 頂層大框架：不論什麼螢幕，一律彈性置中 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: clamp(10px, 4vw, 30px); /* 邊距隨螢幕自動縮放：最小 10px，最大 30px */
 }
 
+/* ======================================= */
+/* 中央內容框：全螢幕自適應邏輯              */
+/* ======================================= */
 
-/* 圓形三條線按鈕 */
-.menu-btn {
-    position: fixed;       /* 固定左上角 */
-    top: 20px;
-    left: 20px;
-
-    width: 60px;
-    height: 60px;
-
-    background: #333;
-    border-radius: 50%;
-
+.main-box, .url-main-box, .view-main-box {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 
-    cursor: pointer;
-    transition: 0.3s;
-
-    z-index: 100;
-}
-
-
-.menu-btn div {
-    width: 30px;
-    height: 4px;
-
-    background: white;
-
-    margin: 4px;
-    border-radius: 5px;
-
-    transition: 0.3s;
-}
-
-
-/* 點擊後變 X */
-.menu-btn.active div:nth-child(1) {
-    transform: translateY(12px) rotate(45deg);
-}
-
-.menu-btn.active div:nth-child(2) {
-    opacity: 0;
-}
-
-.menu-btn.active div:nth-child(3) {
-    transform: translateY(-12px) rotate(-45deg);
-}
-
-
-/* 展開選單 */
-.menu {
-    position: fixed;
-
-    top: 90px;
-    left: 20px;
-
-    width: 200px;
-
-    background: #222;
-    border-radius: 15px;
-
-    overflow: hidden;
-
-    opacity: 0;
-    transform: scale(0);
-
-    transform-origin: top left;
-
-    transition: 0.3s;
-
-    z-index: 99;
-}
-
-
-/* 開啟 */
-.menu.active {
-    opacity: 1;
-    transform: scale(1);
-}
-
-
-.menu a {
-    display: block;
-
-    color: white;
-
-    padding: 15px;
-
-    text-decoration: none;
-}
-
-
-.menu a:hover {
-    background: #555;
-}
-
-
-/* ================= */
-/* 中央內容框        */
-/* ================= */
-
-.main-box {
-
-    width: 800px;
+    /* 💡 核心：寬度一律吃滿外層，再用 max-width 限制電腦版的最大寬度 */
+    width: 100%; 
     height: auto;
+    max-height: 90vh;         /* 避免在極矮的手機上內容垂直爆開 */
+    overflow-y: auto;         /* 超出時內部自動出現滾動條 */
 
     background: rgba(255,255,255,0.1);
-
     border-radius: 15px;
-
-    position: fixed;
-
-    top: 50%;
-    left: 50%;
-
-    transform: translate(-50%, -50%);
-
+    padding: clamp(15px, 5vw, 30px); /* 內襯隨螢幕大小流暢縮放 */
     color: black;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
-.url-main-box {
+/* 針對各自在電腦版的最大寬度限制 */
+.main-box { max-width: 800px; }
+.url-main-box { max-width: 400px; }
+.view-main-box { max-width: 500px; }
 
-    width: 400px;
-    height: auto;
+/* ======================================= */
+/* 元件層：頭像與文字流動排列                */
+/* ======================================= */
 
-    background: rgba(255,255,255,0.1);
-
-    border-radius: 15px;
-
-    position: fixed;
-
-    top: 50%;
-    left: 50%;
-
-    transform: translate(-50%, -50%);
-
-    color: black;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.view-main-box {
-
-    width: 500px;
-    height: auto;
-
-    background: rgba(255,255,255,0.1);
-
-    border-radius: 15px;
-
-    position: fixed;
-
-    top: 50%;
-    left: 50%;
-
-    transform: translate(-50%, -50%);
-
-    color: black;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* 新增：控制頭像和文字排在同一行，且垂直置中 */
 .profile-header {
     display: flex;
-    align-items: center; /* 讓頭像和名字上下居中對齊 */
-    gap: 15px;           /* 頭像和名字之間的間距 */
-}
-
-/* 你原本的 icon 設定 */
-.icon {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    margin-left: 10px; /* 如果你有靠左留白的習慣保留，若有 gap 了也可以視情況刪除 */
-}
-
-.view-box {
-	width: 400px;
-	height: auto;
-	overflow:hidden;
-}
-
-.view-box img{
-	max-width: 400px;
-	max-height: auto;
-	width: 100%;
-	height: auto;
-	obhect-fit:cover;
-}
-
-.view-box h3{
-	color:white;
-}
-
-/* 卡片排列區 */
-.url-list {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 15px;
-
-}
-
-
-/* 每一個連結卡片 */
-.url-card {
-
-    width: 450px;
-    height: 100px;
-
-    background: white;
-
-    border-radius: 20px;
-
-    display: flex;
-
     align-items: center;
-
-    padding: 15px;
-
-    box-sizing: border-box;
-
-    transition: 0.3s;
+    gap: clamp(10px, 3vw, 20px);
+    width: 100%;
+    justify-content: center;
+    
+    /* 💡 當螢幕小於 400px（如 iPhone SE）時，頭像和名字會自動輕巧地切換成上下排列 */
+    flex-wrap: wrap; 
 }
 
+.icon {
+    /* 頭像大小隨螢幕流動：最小 80px，最大 120px */
+    width: clamp(80px, 25vw, 120px);
+    height: clamp(80px, 25vw, 120px);
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* ======================================= */
+/* 連結卡片區：寬度百分百自動貼合            */
+/* ======================================= */
+
+.url-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    align-items: center;
+}
 
 .url-card {
-    width: 350px;
-    height: 80px;
+    /* 💡 不要寫死寬度與高度！寬度滿版，高度由內襯與文字決定 */
+    width: 100%;
+    max-width: 350px; 
+    height: auto; 
 
     display: flex;
     align-items: center;
 
     background: rgba(0, 0, 0, 0.3);
     border-radius: 20px;
-
     text-decoration: none;
     color: white;
 
-    padding: 10px;
+    padding: clamp(10px, 3vw, 15px);
+    transition: 0.3s;
 }
-
 
 .url-card:hover {
     background: rgba(255,255,255,0.2);
 }
 
-
 .url-icon {
-    width: 50px;
-    height: 50px;
+    /* 卡片內圖示隨螢幕微調，且絕對不被擠壓變形 */
+    width: clamp(40px, 12vw, 50px);
+    height: clamp(40px, 12vw, 50px);
     border-radius: 50%;
-    margin-left: 10px;
+    flex-shrink: 0; 
 }
-
 
 .url-text {
-    margin-left: 20px;
-	color:white;
+    margin-left: clamp(10px, 4vw, 20px);
+    color: white;
+    overflow: hidden;
+    flex-grow: 1; /* 讓文字區塊自動吃滿剩餘的卡片寬度 */
 }
 
+/* ======================================= */
+/* 終極流體字體設定：每一台手機都有專屬字級    */
+/* ======================================= */
 
 .url-title {
-    font-size: 22px;
+    /* 最小 16px，大螢幕最大 22px，中間隨螢幕自動變大變小 */
+    font-size: clamp(16px, 4vw, 22px);
     font-weight: bold;
-	color:white;
+    color: white;
 }
 
-
 .url-desc {
-    font-size: 14px;
+    font-size: clamp(11px, 3vw, 14px);
     opacity: 0.7;
 }
 
+.intro-text {
+    white-space: pre-line;
+    color: #B2A4D4;
+    font-weight: normal;
+    margin-top: 20px;
+    line-height: 1.6;
+    
+    /* 阿絲塔的介紹文字自適應：最小 13px，最大 18px */
+    font-size: clamp(13px, 3.5vw, 18px); 
+    word-break: break-all; /* 防超長網址爆版 */
+
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0px 2px 4px rgba(0,0,0,0.8);
+}
+
+.view-box {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    overflow: hidden;
+}
+
+.view-box img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+/* 魔法分隔線自適應：縮小寬度使其在手機上也不會穿牆 */
 .magic-divider {
-  position: relative;
-  width: 100%;
-  height: 60px; /* 給予足夠的高度容納波折與發光點 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    position: relative;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* 左半邊的線（含往上折的角） */
-.magic-divider::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 53%; /* 讓左邊的線只延伸到中間偏左一點 */
-  height: 20px;
-  /* 使用 SVG 畫出左半邊的線與上折角 */
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 20" preserveAspectRatio="none"><path d="M 0 15 L 470 15 L 495 2" fill="none" stroke="%238cbcd4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>');
-  background-repeat: no-repeat;
-  background-position: right center;
-  background-size: 100% 100%;
+/* 側邊欄與按鈕維持 Fixed */
+.menu-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    background: #333;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.3s;
+    z-index: 100;
 }
-
-/* 右半邊的線（含往下折的角） */
-.magic-divider::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  left: 51%; /* 讓右邊的線從中間偏右一點開始 */
-  height: 20px;
-  /* 使用 SVG 畫出右半邊的線與下折角 */
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 20" preserveAspectRatio="none"><path d="M 5 18 L 25 5 L 500 5" fill="none" stroke="%238cbcd4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>');
-  background-repeat: no-repeat;
-  background-position: left center;
-  background-size: 100% 100%;
-}
-
-/* 中間那根斜斜的發光魔杖（如果您不需要這根黃線，可以把下面這段整個刪除） */
-.magic-divider::/* 裝飾用 */ {
-  /* 如果想要加上中間那根黃色斜線，可以解開下方的註解 */
-  /*
-  content: "";
-  position: absolute;
-  width: 4px;
-  height: 50px;
-  background: linear-gradient(to top, rgba(255,255,255,0), #f9f598 70%, #ffffff);
-  transform: rotate(25deg);
-  box-shadow: 0 0 12px #fdfab3, 0 0 20px #fdfab3;
-  z-index: 2;
-  */
-}
+.menu-btn div { width: 30px; height: 4px; background: white; margin: 4px; border-radius: 5px; transition: 0.3s; }
+.menu-btn.active div:nth-child(1) { transform: translateY(12px) rotate(45deg); }
+.menu-btn.active div:nth-child(2) { opacity: 0; }
+.menu-btn.active div:nth-child(3) { transform: translateY(-12px) rotate(-45deg); }
+.menu { position: fixed; top: 90px; left: 20px; width: 200px; background: #222; border-radius: 15px; overflow: hidden; opacity: 0; transform: scale(0); transform-origin: top left; transition: 0.3s; z-index: 99; }
+.menu.active { opacity: 1; transform: scale(1); }
+.menu a { display: block; color: white; padding: 15px; text-decoration: none; }
+.menu a:hover { background: #555; }
