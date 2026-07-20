@@ -1,6 +1,6 @@
 ### 首頁
 [UI 3.0](https://CK-Choco.github.io/web/UI/3.0.html)  
-[秘密](https://CK-Choco.github.io/web/Aasta/indes.html)
+[秘密](https://CK-Choco.github.io/web/Aasta/index.html)
 ### 工具
 [電阻計算](https://CK-Choco.github.io/web/Tools/resistance.html)  
 [時區切換](https://CK-Choco.github.io/web/Tools/clock/TimeZone.html)  
