@@ -14,7 +14,7 @@
 [羅盤時間 ver2.0](https://CK-Choco.github.io/web/Tools/clock/compass_time/compass2.html)  
 ###########  
 [<img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="35"/>](https://github.com/CK-Choco/CK-Choco.github.io)
-[<img src="https://img.icons8.com/ios-filled/50/000000/gitlab.png" width="35"/>](https://gitlab.com/CK-Choco/ck-choco.gitlab.pages)  
+[<img src="https://img.icons8.com/?size=100&id=34886&format=png" width="35"/>](https://gitlab.com/CK-Choco/ck-choco.gitlab.pages)  
 ###########
 
 ### 棄案
