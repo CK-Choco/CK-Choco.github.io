@@ -8,7 +8,7 @@
   :root {
     --bg-color: #000000;
     --text-color: #fefae0;
-    --panel-bg: rgba(25, 25, 25, 0.9);
+    --panel-bg: rgba(25, 25, 25, 0.92);
   }
 
   * {
@@ -160,7 +160,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 300px;
+    width: 310px;
     opacity: 0;
     pointer-events: none;
     transition: all 0.25s ease;
@@ -269,6 +269,29 @@
     opacity: 0.6;
     text-align: right;
   }
+
+  /* 重置按鈕 */
+  .reset-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: rgba(220, 53, 69, 0.2);
+    border: 1px solid rgba(220, 53, 69, 0.5);
+    color: #ff6b6b;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .reset-btn:hover {
+    background-color: rgba(220, 53, 69, 0.8);
+    color: #fff;
+  }
+
+  .reset-btn:active {
+    transform: scale(0.98);
+  }
 </style>
 </head>
 <body>
@@ -362,6 +385,9 @@
     <input type="range" id="speedRange" class="range-slider" min="100" max="2000" step="50" value="300">
     <div class="speed-text">數值越小敲越快 (100ms - 2000ms)</div>
   </div>
+
+  <!-- 重置功德按鈕 -->
+  <button class="reset-btn" id="resetBtn">🔄 重置累積功德</button>
 </div>
 
 <audio id="woodenFishSound" preload="auto">
@@ -380,10 +406,11 @@
   var autoToggle = document.getElementById("autoToggle");
   var speedRange = document.getElementById("speedRange");
   var speedValue = document.getElementById("speedValue");
+  var resetBtn = document.getElementById("resetBtn");
   var secretTrigger = document.getElementById("secretTrigger");
 
   var autoInterval = null;
-  var secretCode = "wood"; // 新暗號：wood
+  var secretCode = "wood"; // 鍵盤暗號：wood
   var inputBuffer = "";
   var secretClickCount = 0;
 
@@ -426,7 +453,7 @@
     }, 800);
   }
 
-  // 3. 鍵盤輸入暗號監聽 (直接敲擊鍵盤字母 w-o-o-d)
+  // 3. 鍵盤輸入暗號監聽 (鍵盤輸入 w-o-o-d)
   window.addEventListener("keydown", function(e) {
     if (e.key.length === 1) {
       inputBuffer += e.key.toLowerCase();
@@ -464,7 +491,16 @@
     togglePanel(false);
   });
 
-  // 5. 自動敲木魚邏輯與速度切換
+  // 5. 重置累積功德邏輯
+  resetBtn.addEventListener("click", function() {
+    if (confirm("確定要歸零累積的功德嗎？")) {
+      count = 0;
+      counterDisplay.textContent = count;
+      localStorage.setItem("meritCount", count);
+    }
+  });
+
+  // 6. 自動敲木魚邏輯與速度切換
   autoToggle.addEventListener("change", function() {
     if (this.checked) {
       startAutoKnock();
@@ -473,12 +509,11 @@
     }
   });
 
-  // 調整速度拉桿時：只更新速度數值與重新定時，絕不額外觸發 knock()
   speedRange.addEventListener("input", function() {
     speedValue.textContent = this.value + "ms";
     if (autoToggle.checked) {
       stopAutoKnock();
-      startAutoKnock(false); // 傳入 false 表示調整速度時不立即敲擊
+      startAutoKnock(false); // 不觸發敲擊音效
     }
   });
 
