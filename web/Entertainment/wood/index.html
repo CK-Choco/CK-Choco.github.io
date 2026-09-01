@@ -383,7 +383,7 @@
   var secretTrigger = document.getElementById("secretTrigger");
 
   var autoInterval = null;
-  var secretCode = "wood"; // 設定觸發暗號 (輸入 merit)
+  var secretCode = "wood"; // 新暗號：wood
   var inputBuffer = "";
   var secretClickCount = 0;
 
@@ -426,21 +426,18 @@
     }, 800);
   }
 
-  // 3. 鍵盤輸入暗號監聽 (直接敲擊鍵盤字母 m-e-r-i-t)
+  // 3. 鍵盤輸入暗號監聽 (直接敲擊鍵盤字母 w-o-o-d)
   window.addEventListener("keydown", function(e) {
-    // 忽略修飾鍵
     if (e.key.length === 1) {
       inputBuffer += e.key.toLowerCase();
       
-      // 只保留最近與暗號等長的字元長度
       if (inputBuffer.length > secretCode.length) {
         inputBuffer = inputBuffer.slice(-secretCode.length);
       }
 
-      // 匹配成功，顯示隱藏選單
       if (inputBuffer === secretCode) {
         togglePanel(true);
-        inputBuffer = ""; // 清空輸入緩衝
+        inputBuffer = "";
       }
     }
   });
@@ -476,18 +473,20 @@
     }
   });
 
+  // 調整速度拉桿時：只更新速度數值與重新定時，絕不額外觸發 knock()
   speedRange.addEventListener("input", function() {
     speedValue.textContent = this.value + "ms";
     if (autoToggle.checked) {
-      // 重新以新速度啟動定時器
       stopAutoKnock();
-      startAutoKnock();
+      startAutoKnock(false); // 傳入 false 表示調整速度時不立即敲擊
     }
   });
 
-  function startAutoKnock() {
+  function startAutoKnock(triggerImmediately = true) {
     var interval = parseInt(speedRange.value) || 300;
-    knock(); // 立即敲擊第一次
+    if (triggerImmediately) {
+      knock();
+    }
     autoInterval = setInterval(knock, interval);
   }
 
