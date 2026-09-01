@@ -3,117 +3,500 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/png" href="icon.png" />
-<title>敲木魚</title>
+<title>電子木魚 - 積攢功德</title>
 <style>
+  :root {
+    --bg-color: #000000;
+    --text-color: #fefae0;
+    --panel-bg: rgba(25, 25, 25, 0.9);
+  }
+
+  * {
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
   body {
-    background-color: black;
-    font-family: Arial, sans-serif;
+    background-color: var(--bg-color);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: center; /* 在主轴上水平居中 */
-    align-items: center; /* 在交叉轴上垂直居中 */
-    height: 100vh; /* 使用视窗的高度 */
-  }
- 
-  .container {
-    max-width: 800px; /* 设置最大宽度 */
-    margin: 0 auto; /* 居中 */
-    padding: 20px;
-    color: white;
-    position: relative; /* 设置容器为相对定位 */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    color: var(--text-color);
   }
 
-  @media screen and (max-width: 600px) {
-    .container {
-      padding: 10px;
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+  }
+
+  /* 功德計數區塊 */
+  .counter-board {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .counter-title {
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    opacity: 0.7;
+    margin-bottom: 8px;
+  }
+
+  .counter-value {
+    font-size: 3.5rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+  }
+
+  /* 木魚本體與互動區 */
+  .fish-wrapper {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .wooden-fish-svg {
+    width: 320px;
+    height: 240px;
+    transition: transform 0.05s cubic-bezier(0, 0, 0.2, 1);
+    filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.8));
+  }
+
+  .fish-wrapper:hover .wooden-fish-svg {
+    filter: drop-shadow(0 0 15px rgba(210, 160, 90, 0.25)) drop-shadow(0 15px 25px rgba(0, 0, 0, 0.8));
+  }
+
+  /* 當觸發敲擊時顯示的 CSS 動畫類別 */
+  .fish-wrapper.active .wooden-fish-svg {
+    transform: scale(0.94);
+  }
+
+  /* 白頭木棒 SVG 與敲擊動畫 */
+  .mallet-svg {
+    position: absolute;
+    top: -30px;
+    right: 15px;
+    width: 140px;
+    height: 140px;
+    transform-origin: 85% 85%;
+    pointer-events: none;
+    transition: transform 0.06s ease-in-out;
+    z-index: 10;
+    filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.6));
+  }
+
+  .fish-wrapper.active .mallet-svg {
+    transform: rotate(-30deg) translate(-25px, 25px);
+  }
+
+  /* 功德 +1 浮動文字特效 */
+  .floating-text {
+    position: absolute;
+    top: -30px;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #fff;
+    pointer-events: none;
+    animation: floatUp 0.8s ease-out forwards;
+    white-space: nowrap;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+  }
+
+  @keyframes floatUp {
+    0% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      opacity: 0.85;
+      transform: translateY(-50px) scale(1.15);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-100px) scale(1);
     }
   }
 
-  .wooden-fish {
-    width: 130px;
-    height: 130px;
-    background: url("icon.png") no-repeat;
-    border-style: none;
-    position: relative; /* 设置按钮为相对定位，使得子元素可以相对其定位 */
+  /* 左上角隱藏點擊觸發區 */
+  .secret-trigger {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    z-index: 99;
+    cursor: default;
   }
 
-  .wood-block {
-    position: absolute; /* 设置木块为绝对定位 */
-    top: -80px; /* 在按钮上方显示 */
-    left: 30%; /* 水平居中 */
-    transform: translateX(-50%); /* 水平居中 */
-    color: #ffffffff;
-	background-color: rgba(0, 0, 0, 0); /* 半透明白色背景 */
-	padding: 5px 10px; /* 设置内边距 */
-    border-radius: 5px; /* 圆角 */
-    z-index: 1; /* 设置 z-index 以确保木块位于按钮之上 */
+  /* 隱藏選單面板 */
+  .secret-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    background: var(--panel-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 25px 30px;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 300px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.25s ease;
   }
 
-  .counter {
-    position: absolute; /* 设置计数器为绝对定位 */
-    top: -120px; /* 在按钮上方显示 */
-    left: 40%; /* 水平居中 */
-    transform: translateX(-50%); /* 水平居中 */
-    color: white;
-    font-size: 22px;
-    z-index: 1; /* 设置 z-index 以确保计数器位于按钮之上 */
-  }
-  
-  .counter1 {
-	position: absolute; /* 设置计数器为绝对定位 */
-    top: -122px; /* 在按钮上方显示 */
-    left: -50px; /* 水平居中 */
-    transform: translateX(-50%); /* 水平居中 */
+  .secret-panel.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
   }
 
-  .counter-container {
-    position: absolute; /* 设置计数器容器为绝对定位 */
-    top: -200px; /* 在按钮上方显示 */
-    left: 45%; /* 水平居中 */
-    transform: translateX(-50%); /* 水平居中 */
-    color: white;
-    font-size: 20px;
-    z-index: 1; /* 设置 z-index 以确保计数器容器位于按钮之上 */
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+  }
+
+  .panel-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #ffd700;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+
+  .close-btn:hover {
+    color: #fff;
+  }
+
+  .option-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .option-label {
+    font-size: 0.95rem;
+  }
+
+  /* 開關 Toggle 按鈕 */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 26px;
+  }
+
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #444;
+    transition: .3s;
+    border-radius: 26px;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+  }
+
+  input:checked + .slider {
+    background-color: #e8a862;
+  }
+
+  input:checked + .slider:before {
+    transform: translateX(22px);
+  }
+
+  /* 速度控制條 */
+  .speed-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .range-slider {
+    width: 100%;
+    accent-color: #e8a862;
+    cursor: pointer;
+  }
+
+  .speed-text {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    text-align: right;
   }
 </style>
 </head>
 <body>
+
+<!-- 左上角隱藏點擊區（連點 3 次可直接喚出選單） -->
+<div class="secret-trigger" id="secretTrigger"></div>
+
 <div class="container">
-  <button class="wooden-fish" id="woodenFish"></button>
-  <div class="counter-container">
-	<div class="counter1">功德:</div>
-    <div id="counter" class="counter">0</div>
+  <div class="counter-board">
+    <div class="counter-title">累積功德</div>
+    <div id="counter" class="counter-value">0</div>
+  </div>
+
+  <div class="fish-wrapper" id="woodenFish">
+    <!-- 白頭木槌 SVG -->
+    <svg class="mallet-svg" viewBox="0 0 120 120">
+      <path d="M 100 100 L 48 48" stroke="#d7a16c" stroke-width="8" stroke-linecap="round"/>
+      <path d="M 100 100 L 48 48" stroke="#f0c293" stroke-width="3" stroke-linecap="round"/>
+      <ellipse cx="38" cy="38" rx="14" ry="11" fill="#f5f5f7" transform="rotate(-45 38 38)" stroke="#d0d0d0" stroke-width="1.5"/>
+      <circle cx="34" cy="34" r="3" fill="#cbb398"/>
+    </svg>
+
+    <!-- 原木側面木魚 SVG -->
+    <svg class="wooden-fish-svg" viewBox="0 0 280 210">
+      <defs>
+        <radialGradient id="realWoodGrad" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#f0c080"/>
+          <stop offset="40%" stop-color="#d49a50"/>
+          <stop offset="80%" stop-color="#9a6428"/>
+          <stop offset="100%" stop-color="#5a350c"/>
+        </radialGradient>
+
+        <linearGradient id="vSlotShadow" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#0a0502"/>
+          <stop offset="100%" stop-color="#2a1405"/>
+        </linearGradient>
+      </defs>
+
+      <ellipse cx="140" cy="190" rx="95" ry="12" fill="#000000" opacity="0.75"/>
+
+      <!-- 木魚主體 -->
+      <path d="M 35 110 
+               C 25 50, 80 15, 140 25 
+               C 190 35, 220 70, 235 120 
+               C 245 150, 230 165, 210 165 
+               C 160 165, 100 170, 55 155 
+               C 35 145, 35 125, 35 110 Z" 
+            fill="url(#realWoodGrad)" stroke="#3a1e05" stroke-width="3"/>
+
+      <!-- 尾部線條 -->
+      <path d="M 210 122 C 220 130, 225 145, 220 160" fill="none" stroke="#4a2708" stroke-width="3"/>
+      <path d="M 220 125 C 230 135, 233 145, 228 158" fill="none" stroke="#4a2708" stroke-width="2.5"/>
+      <path d="M 200 158 L 230 155" fill="none" stroke="#4a2708" stroke-width="2"/>
+
+      <!-- 開口 -->
+      <path d="M 35 110 
+               L 115 110 
+               C 155 112, 175 125, 165 145 
+               C 155 155, 125 148, 105 132 
+               L 37 122 Z" 
+            fill="url(#vSlotShadow)" stroke="#1a0a02" stroke-width="2"/>
+
+      <!-- 光澤細節 -->
+      <path d="M 65 60 C 95 40, 135 45, 165 60" fill="none" stroke="#fadb96" stroke-width="2" opacity="0.25"/>
+      <path d="M 55 80 C 85 60, 135 65, 170 85" fill="none" stroke="#fadb96" stroke-width="2" opacity="0.2"/>
+      <path d="M 75 42 C 105 28, 135 32, 155 45" fill="none" stroke="#fadb96" stroke-width="3" opacity="0.3"/>
+    </svg>
   </div>
 </div>
-<audio id="woodenFishSound">
+
+<!-- 隱藏控制面板 -->
+<div class="secret-panel" id="secretPanel">
+  <div class="panel-header">
+    <div class="panel-title">⚡ 功德外掛選單</div>
+    <button class="close-btn" id="closePanel">✕</button>
+  </div>
+
+  <div class="option-item">
+    <span class="option-label">自動敲木魚</span>
+    <label class="switch">
+      <input type="checkbox" id="autoToggle">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="speed-container">
+    <div class="option-item">
+      <span class="option-label">敲擊間隔 (速度)</span>
+      <span id="speedValue">300ms</span>
+    </div>
+    <input type="range" id="speedRange" class="range-slider" min="100" max="2000" step="50" value="300">
+    <div class="speed-text">數值越小敲越快 (100ms - 2000ms)</div>
+  </div>
+</div>
+
+<audio id="woodenFishSound" preload="auto">
   <source src="f.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
 </audio>
 
 <script>
-var count = 0; // 初始化计数器
-
-document.getElementById("woodenFish").addEventListener("click", function() {
-  var woodBlock = document.createElement("div");
-  woodBlock.className = "wood-block";
-  woodBlock.textContent = "功德+1"; // 设置木块文本内容
-  this.appendChild(woodBlock);
-
-  // 更新计数器
-  count++;
-  document.getElementById("counter").textContent = count;
-
-  // 播放敲击音效
+  var count = parseInt(localStorage.getItem("meritCount")) || 0;
+  var counterDisplay = document.getElementById("counter");
+  var fishWrapper = document.getElementById("woodenFish");
   var audio = document.getElementById("woodenFishSound");
-  audio.currentTime = 0; // 重置音频
-  audio.play();
 
-  setTimeout(function() {
-    woodBlock.remove();
-  }, 125); // 1 秒后删除木块
-});
+  // 暗號與控制選單元件
+  var secretPanel = document.getElementById("secretPanel");
+  var closePanel = document.getElementById("closePanel");
+  var autoToggle = document.getElementById("autoToggle");
+  var speedRange = document.getElementById("speedRange");
+  var speedValue = document.getElementById("speedValue");
+  var secretTrigger = document.getElementById("secretTrigger");
+
+  var autoInterval = null;
+  var secretCode = "merit"; // 設定觸發暗號 (輸入 merit)
+  var inputBuffer = "";
+  var secretClickCount = 0;
+
+  counterDisplay.textContent = count;
+
+  // 1. 核心敲擊邏輯
+  function knock() {
+    count++;
+    counterDisplay.textContent = count;
+    localStorage.setItem("meritCount", count);
+
+    // 音效重置播放
+    audio.currentTime = 0;
+    audio.play().catch(function(err) {});
+
+    // 觸發縮放與槌子視覺反饋
+    fishWrapper.classList.add("active");
+    setTimeout(function() {
+      fishWrapper.classList.remove("active");
+    }, 60);
+
+    createFloatingText();
+  }
+
+  // 2. 點擊木魚手動敲擊
+  fishWrapper.addEventListener("click", knock);
+
+  function createFloatingText() {
+    var text = document.createElement("div");
+    text.className = "floating-text";
+    text.textContent = "功德 +1";
+
+    var randomX = (Math.random() - 0.5) * 30;
+    text.style.left = "calc(50% + " + randomX + "px)";
+
+    fishWrapper.appendChild(text);
+
+    setTimeout(function() {
+      text.remove();
+    }, 800);
+  }
+
+  // 3. 鍵盤輸入暗號監聽 (直接敲擊鍵盤字母 m-e-r-i-t)
+  window.addEventListener("keydown", function(e) {
+    // 忽略修飾鍵
+    if (e.key.length === 1) {
+      inputBuffer += e.key.toLowerCase();
+      
+      // 只保留最近與暗號等長的字元長度
+      if (inputBuffer.length > secretCode.length) {
+        inputBuffer = inputBuffer.slice(-secretCode.length);
+      }
+
+      // 匹配成功，顯示隱藏選單
+      if (inputBuffer === secretCode) {
+        togglePanel(true);
+        inputBuffer = ""; // 清空輸入緩衝
+      }
+    }
+  });
+
+  // 4. 左上角連續點擊 3 次輔助觸發
+  secretTrigger.addEventListener("click", function() {
+    secretClickCount++;
+    if (secretClickCount >= 3) {
+      togglePanel(true);
+      secretClickCount = 0;
+    }
+    setTimeout(function() { secretClickCount = 0; }, 1000);
+  });
+
+  function togglePanel(show) {
+    if (show) {
+      secretPanel.classList.add("show");
+    } else {
+      secretPanel.classList.remove("show");
+    }
+  }
+
+  closePanel.addEventListener("click", function() {
+    togglePanel(false);
+  });
+
+  // 5. 自動敲木魚邏輯與速度切換
+  autoToggle.addEventListener("change", function() {
+    if (this.checked) {
+      startAutoKnock();
+    } else {
+      stopAutoKnock();
+    }
+  });
+
+  speedRange.addEventListener("input", function() {
+    speedValue.textContent = this.value + "ms";
+    if (autoToggle.checked) {
+      // 重新以新速度啟動定時器
+      stopAutoKnock();
+      startAutoKnock();
+    }
+  });
+
+  function startAutoKnock() {
+    var interval = parseInt(speedRange.value) || 300;
+    knock(); // 立即敲擊第一次
+    autoInterval = setInterval(knock, interval);
+  }
+
+  function stopAutoKnock() {
+    if (autoInterval) {
+      clearInterval(autoInterval);
+      autoInterval = null;
+    }
+  }
 </script>
 </body>
 </html>
